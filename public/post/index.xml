@@ -5,7 +5,7 @@
     <link>https://akumar.netlify.app/post/</link>
       <atom:link href="https://akumar.netlify.app/post/index.xml" rel="self" type="application/rss+xml" />
     <description>Posts</description>
-    <generator>Wowchemy (https://wowchemy.com)</generator><language>en-us</language><copyright>© 2021 Abhishek Kumar</copyright><lastBuildDate>Wed, 13 Oct 2021 00:00:00 +0000</lastBuildDate>
+    <generator>Wowchemy (https://wowchemy.com)</generator><language>en-us</language><copyright>© 2021 Abhishek Kumar</copyright><lastBuildDate>Sat, 16 Oct 2021 00:00:00 +0000</lastBuildDate>
     <image>
       <url>https://akumar.netlify.app/media/icon_hu63af8eaec43cac92558e0334cb2dff24_36198_512x512_fill_lanczos_center_3.png</url>
       <title>Posts</title>
@@ -13,7 +13,106 @@
     </image>
     
     <item>
-      <title>Analysis of Variance (ANOVA) with `R`</title>
+      <title>Google Earth Engine in R</title>
+      <link>https://akumar.netlify.app/post/google-earth-engine-in-r/</link>
+      <pubDate>Sat, 16 Oct 2021 00:00:00 +0000</pubDate>
+      <guid>https://akumar.netlify.app/post/google-earth-engine-in-r/</guid>
+      <description>
+&lt;script src=&#34;https://akumar.netlify.app/post/google-earth-engine-in-r/index.en_files/header-attrs/header-attrs.js&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;https://akumar.netlify.app/post/google-earth-engine-in-r/index.en_files/htmlwidgets/htmlwidgets.js&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;https://akumar.netlify.app/post/google-earth-engine-in-r/index.en_files/jquery/jquery.min.js&#34;&gt;&lt;/script&gt;
+&lt;link href=&#34;https://akumar.netlify.app/post/google-earth-engine-in-r/index.en_files/leaflet/leaflet.css&#34; rel=&#34;stylesheet&#34; /&gt;
+&lt;script src=&#34;https://akumar.netlify.app/post/google-earth-engine-in-r/index.en_files/leaflet/leaflet.js&#34;&gt;&lt;/script&gt;
+&lt;link href=&#34;https://akumar.netlify.app/post/google-earth-engine-in-r/index.en_files/leafletfix/leafletfix.css&#34; rel=&#34;stylesheet&#34; /&gt;
+&lt;script src=&#34;https://akumar.netlify.app/post/google-earth-engine-in-r/index.en_files/proj4/proj4.min.js&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;https://akumar.netlify.app/post/google-earth-engine-in-r/index.en_files/Proj4Leaflet/proj4leaflet.js&#34;&gt;&lt;/script&gt;
+&lt;link href=&#34;https://akumar.netlify.app/post/google-earth-engine-in-r/index.en_files/rstudio_leaflet/rstudio_leaflet.css&#34; rel=&#34;stylesheet&#34; /&gt;
+&lt;script src=&#34;https://akumar.netlify.app/post/google-earth-engine-in-r/index.en_files/leaflet-binding/leaflet.js&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;https://akumar.netlify.app/post/google-earth-engine-in-r/index.en_files/leaflet-providers/leaflet-providers_1.9.0.js&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;https://akumar.netlify.app/post/google-earth-engine-in-r/index.en_files/leaflet-providers-plugin/leaflet-providers-plugin.js&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;https://akumar.netlify.app/post/google-earth-engine-in-r/index.en_files/clipboard/setClipboardText.js&#34;&gt;&lt;/script&gt;
+
+
+&lt;div id=&#34;introduction&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;Google Earth Engine (GEE) is a cloud-based platform for planetary-scale geo-spatial analysis &lt;span class=&#34;citation&#34;&gt;(&lt;a href=&#34;#ref-Gorelick2017&#34; role=&#34;doc-biblioref&#34;&gt;Gorelick et al. 2017&lt;/a&gt;)&lt;/span&gt;. The cloud-based computation ability overcomes the limitations of data access, data storage, personal limited computation ability and time. Thus, it provides a platform for large scale analysis of earth observations through access to satellite imagery.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(rgee)
+ee_Initialize()
+
+#knitr::write_bib(x = c(.packages(), &amp;quot;blogdown&amp;quot;), &amp;quot;packages.bib&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# define a region of interest
+roi &amp;lt;- ee$Geometry$Rectangle(76.85, 30.66, 77.01, 30.75)
+
+# load and pre-process sentinel-2 data
+# Filter the image collection
+img &amp;lt;- ee$ImageCollection(&amp;quot;COPERNICUS/S2_SR&amp;quot;)$
+  
+  # filter the date range we are interested in
+  filterDate(&amp;quot;2020-01-01&amp;quot;, &amp;quot;2020-12-31&amp;quot;)$
+  
+  # filter geographic area we are interested in 
+  filterBounds(roi)$
+  
+  # filter cloud cover less than 20%
+  filter(ee$Filter$lt(&amp;quot;CLOUD_COVERAGE_ASSESSMENT&amp;quot;, 20))$
+  
+  # filter cloud pixel percentage to less than 20%
+  filter(ee$Filter$lt(&amp;quot;CLOUDY_PIXEL_PERCENTAGE&amp;quot;, 20))$
+  
+  # reduce image collection by taking median value
+  median()$
+  
+  # clip to region of interest
+  clip(roi)&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;median-true-color-composite&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Median true color composite&lt;/h1&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;Map$centerObject(roi, 13)
+Map$addLayer(img, 
+             visParams = list(min = 0, max = 3000, bands = c(&amp;quot;B4&amp;quot;, &amp;quot;B3&amp;quot;, &amp;quot;B2&amp;quot;)),
+             name = &amp;quot;true color&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;div id=&#34;htmlwidget-1&#34; style=&#34;width:90%;height:480px;&#34; class=&#34;leaflet html-widget&#34;&gt;&lt;/div&gt;
+&lt;script type=&#34;application/json&#34; data-for=&#34;htmlwidget-1&#34;&gt;{&#34;x&#34;:{&#34;options&#34;:{&#34;minZoom&#34;:1,&#34;maxZoom&#34;:52,&#34;crs&#34;:{&#34;crsClass&#34;:&#34;L.CRS.EPSG3857&#34;,&#34;code&#34;:null,&#34;proj4def&#34;:null,&#34;projectedBounds&#34;:null,&#34;options&#34;:{}},&#34;preferCanvas&#34;:false,&#34;bounceAtZoomLimits&#34;:false,&#34;maxBounds&#34;:[[[-90,-370]],[[90,370]]]},&#34;calls&#34;:[{&#34;method&#34;:&#34;addProviderTiles&#34;,&#34;args&#34;:[&#34;CartoDB.Positron&#34;,&#34;CartoDB.Positron&#34;,&#34;CartoDB.Positron&#34;,{&#34;errorTileUrl&#34;:&#34;&#34;,&#34;noWrap&#34;:false,&#34;detectRetina&#34;:false,&#34;pane&#34;:&#34;tilePane&#34;}]},{&#34;method&#34;:&#34;addProviderTiles&#34;,&#34;args&#34;:[&#34;OpenStreetMap&#34;,&#34;OpenStreetMap&#34;,&#34;OpenStreetMap&#34;,{&#34;errorTileUrl&#34;:&#34;&#34;,&#34;noWrap&#34;:false,&#34;detectRetina&#34;:false,&#34;pane&#34;:&#34;tilePane&#34;}]},{&#34;method&#34;:&#34;addProviderTiles&#34;,&#34;args&#34;:[&#34;CartoDB.DarkMatter&#34;,&#34;CartoDB.DarkMatter&#34;,&#34;CartoDB.DarkMatter&#34;,{&#34;errorTileUrl&#34;:&#34;&#34;,&#34;noWrap&#34;:false,&#34;detectRetina&#34;:false,&#34;pane&#34;:&#34;tilePane&#34;}]},{&#34;method&#34;:&#34;addProviderTiles&#34;,&#34;args&#34;:[&#34;Esri.WorldImagery&#34;,&#34;Esri.WorldImagery&#34;,&#34;Esri.WorldImagery&#34;,{&#34;errorTileUrl&#34;:&#34;&#34;,&#34;noWrap&#34;:false,&#34;detectRetina&#34;:false,&#34;pane&#34;:&#34;tilePane&#34;}]},{&#34;method&#34;:&#34;addProviderTiles&#34;,&#34;args&#34;:[&#34;OpenTopoMap&#34;,&#34;OpenTopoMap&#34;,&#34;OpenTopoMap&#34;,{&#34;errorTileUrl&#34;:&#34;&#34;,&#34;noWrap&#34;:false,&#34;detectRetina&#34;:false,&#34;pane&#34;:&#34;tilePane&#34;}]},{&#34;method&#34;:&#34;addLayersControl&#34;,&#34;args&#34;:[[&#34;CartoDB.Positron&#34;,&#34;OpenStreetMap&#34;,&#34;CartoDB.DarkMatter&#34;,&#34;Esri.WorldImagery&#34;,&#34;OpenTopoMap&#34;],[],{&#34;collapsed&#34;:true,&#34;autoZIndex&#34;:true,&#34;position&#34;:&#34;topleft&#34;}]},{&#34;method&#34;:&#34;addScaleBar&#34;,&#34;args&#34;:[{&#34;maxWidth&#34;:100,&#34;metric&#34;:true,&#34;imperial&#34;:true,&#34;updateWhenIdle&#34;:true,&#34;position&#34;:&#34;bottomleft&#34;}]},{&#34;method&#34;:&#34;addTiles&#34;,&#34;args&#34;:[&#34;https://earthengine.googleapis.com/v1alpha/projects/earthengine-legacy/maps/9ddd0ba76d265f0ab36ee8993a5bf7cf-27af837e71df78a88cd456853f4ade0a/tiles/{z}/{x}/{y}&#34;,&#34;true color&#34;,&#34;true color&#34;,{&#34;minZoom&#34;:0,&#34;maxZoom&#34;:18,&#34;tileSize&#34;:256,&#34;subdomains&#34;:&#34;abc&#34;,&#34;errorTileUrl&#34;:&#34;&#34;,&#34;tms&#34;:false,&#34;noWrap&#34;:false,&#34;zoomOffset&#34;:0,&#34;zoomReverse&#34;:false,&#34;opacity&#34;:1,&#34;zIndex&#34;:1,&#34;detectRetina&#34;:false}]},{&#34;method&#34;:&#34;addLayersControl&#34;,&#34;args&#34;:[[&#34;CartoDB.Positron&#34;,&#34;OpenStreetMap&#34;,&#34;CartoDB.DarkMatter&#34;,&#34;Esri.WorldImagery&#34;,&#34;OpenTopoMap&#34;],&#34;true color&#34;,{&#34;collapsed&#34;:true,&#34;autoZIndex&#34;:true,&#34;position&#34;:&#34;topleft&#34;}]},{&#34;method&#34;:&#34;hideGroup&#34;,&#34;args&#34;:[null]}],&#34;setView&#34;:[[30.7050175238026,76.9299999999991],13,[]]},&#34;evals&#34;:[],&#34;jsHooks&#34;:{&#34;render&#34;:[{&#34;code&#34;:&#34;function(el, x, data) {\n  return (\n      function(el, x, data) {\n      // get the leaflet map\n      var map = this; //HTMLWidgets.find(&#39;#&#39; + el.id);\n      // we need a new div element because we have to handle\n      // the mouseover output separately\n      // debugger;\n      function addElement () {\n      // generate new div Element\n      var newDiv = $(document.createElement(&#39;div&#39;));\n      // append at end of leaflet htmlwidget container\n      $(el).append(newDiv);\n      //provide ID and style\n      newDiv.addClass(&#39;lnlt&#39;);\n      newDiv.css({\n      &#39;position&#39;: &#39;relative&#39;,\n      &#39;bottomleft&#39;:  &#39;0px&#39;,\n      &#39;background-color&#39;: &#39;rgba(255, 255, 255, 0.7)&#39;,\n      &#39;box-shadow&#39;: &#39;0 0 2px #bbb&#39;,\n      &#39;background-clip&#39;: &#39;padding-box&#39;,\n      &#39;margin&#39;: &#39;0&#39;,\n      &#39;padding-left&#39;: &#39;5px&#39;,\n      &#39;color&#39;: &#39;#333&#39;,\n      &#39;font&#39;: &#39;9px/1.5 \&#34;Helvetica Neue\&#34;, Arial, Helvetica, sans-serif&#39;,\n      &#39;z-index&#39;: &#39;700&#39;,\n      });\n      return newDiv;\n      }\n\n\n      // check for already existing lnlt class to not duplicate\n      var lnlt = $(el).find(&#39;.lnlt&#39;);\n\n      if(!lnlt.length) {\n      lnlt = addElement();\n\n      // grab the special div we generated in the beginning\n      // and put the mousmove output there\n\n      map.on(&#39;mousemove&#39;, function (e) {\n      if (e.originalEvent.ctrlKey) {\n      if (document.querySelector(&#39;.lnlt&#39;) === null) lnlt = addElement();\n      lnlt.text(\n                           &#39; lon: &#39; + (e.latlng.lng).toFixed(5) +\n                           &#39; | lat: &#39; + (e.latlng.lat).toFixed(5) +\n                           &#39; | zoom: &#39; + map.getZoom() +\n                           &#39; | x: &#39; + L.CRS.EPSG3857.project(e.latlng).x.toFixed(0) +\n                           &#39; | y: &#39; + L.CRS.EPSG3857.project(e.latlng).y.toFixed(0) +\n                           &#39; | epsg: 3857 &#39; +\n                           &#39; | proj4: +proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs &#39;);\n      } else {\n      if (document.querySelector(&#39;.lnlt&#39;) === null) lnlt = addElement();\n      lnlt.text(\n                      &#39; lon: &#39; + (e.latlng.lng).toFixed(5) +\n                      &#39; | lat: &#39; + (e.latlng.lat).toFixed(5) +\n                      &#39; | zoom: &#39; + map.getZoom() + &#39; &#39;);\n      }\n      });\n\n      // remove the lnlt div when mouse leaves map\n      map.on(&#39;mouseout&#39;, function (e) {\n      var strip = document.querySelector(&#39;.lnlt&#39;);\n      if( strip !==null) strip.remove();\n      });\n\n      };\n\n      //$(el).keypress(67, function(e) {\n      map.on(&#39;preclick&#39;, function(e) {\n      if (e.originalEvent.ctrlKey) {\n      if (document.querySelector(&#39;.lnlt&#39;) === null) lnlt = addElement();\n      lnlt.text(\n                      &#39; lon: &#39; + (e.latlng.lng).toFixed(5) +\n                      &#39; | lat: &#39; + (e.latlng.lat).toFixed(5) +\n                      &#39; | zoom: &#39; + map.getZoom() + &#39; &#39;);\n      var txt = document.querySelector(&#39;.lnlt&#39;).textContent;\n      console.log(txt);\n      //txt.innerText.focus();\n      //txt.select();\n      setClipboardText(&#39;\&#34;&#39; + txt + &#39;\&#34;&#39;);\n      }\n      });\n\n      }\n      ).call(this.getMap(), el, x, data);\n}&#34;,&#34;data&#34;:null},{&#34;code&#34;:&#34;function(el, x, data) {\n  return (function(el,x,data){\n           var map = this;\n\n           map.on(&#39;keypress&#39;, function(e) {\n               console.log(e.originalEvent.code);\n               var key = e.originalEvent.code;\n               if (key === &#39;KeyE&#39;) {\n                   var bb = this.getBounds();\n                   var txt = JSON.stringify(bb);\n                   console.log(txt);\n\n                   setClipboardText(&#39;\\&#39;&#39; + txt + &#39;\\&#39;&#39;);\n               }\n           })\n        }).call(this.getMap(), el, x, data);\n}&#34;,&#34;data&#34;:null}]}}&lt;/script&gt;
+&lt;/div&gt;
+&lt;div id=&#34;median-false-color-composite&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Median false color composite&lt;/h1&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;Map$centerObject(roi, 13)
+Map$addLayer(img, 
+             visParams = list(min = 0, max = 3000, bands = c(&amp;quot;B8&amp;quot;, &amp;quot;B4&amp;quot;, &amp;quot;B3&amp;quot;)),
+             name = &amp;quot;false color&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;div id=&#34;htmlwidget-2&#34; style=&#34;width:90%;height:480px;&#34; class=&#34;leaflet html-widget&#34;&gt;&lt;/div&gt;
+&lt;script type=&#34;application/json&#34; data-for=&#34;htmlwidget-2&#34;&gt;{&#34;x&#34;:{&#34;options&#34;:{&#34;minZoom&#34;:1,&#34;maxZoom&#34;:52,&#34;crs&#34;:{&#34;crsClass&#34;:&#34;L.CRS.EPSG3857&#34;,&#34;code&#34;:null,&#34;proj4def&#34;:null,&#34;projectedBounds&#34;:null,&#34;options&#34;:{}},&#34;preferCanvas&#34;:false,&#34;bounceAtZoomLimits&#34;:false,&#34;maxBounds&#34;:[[[-90,-370]],[[90,370]]]},&#34;calls&#34;:[{&#34;method&#34;:&#34;addProviderTiles&#34;,&#34;args&#34;:[&#34;CartoDB.Positron&#34;,&#34;CartoDB.Positron&#34;,&#34;CartoDB.Positron&#34;,{&#34;errorTileUrl&#34;:&#34;&#34;,&#34;noWrap&#34;:false,&#34;detectRetina&#34;:false,&#34;pane&#34;:&#34;tilePane&#34;}]},{&#34;method&#34;:&#34;addProviderTiles&#34;,&#34;args&#34;:[&#34;OpenStreetMap&#34;,&#34;OpenStreetMap&#34;,&#34;OpenStreetMap&#34;,{&#34;errorTileUrl&#34;:&#34;&#34;,&#34;noWrap&#34;:false,&#34;detectRetina&#34;:false,&#34;pane&#34;:&#34;tilePane&#34;}]},{&#34;method&#34;:&#34;addProviderTiles&#34;,&#34;args&#34;:[&#34;CartoDB.DarkMatter&#34;,&#34;CartoDB.DarkMatter&#34;,&#34;CartoDB.DarkMatter&#34;,{&#34;errorTileUrl&#34;:&#34;&#34;,&#34;noWrap&#34;:false,&#34;detectRetina&#34;:false,&#34;pane&#34;:&#34;tilePane&#34;}]},{&#34;method&#34;:&#34;addProviderTiles&#34;,&#34;args&#34;:[&#34;Esri.WorldImagery&#34;,&#34;Esri.WorldImagery&#34;,&#34;Esri.WorldImagery&#34;,{&#34;errorTileUrl&#34;:&#34;&#34;,&#34;noWrap&#34;:false,&#34;detectRetina&#34;:false,&#34;pane&#34;:&#34;tilePane&#34;}]},{&#34;method&#34;:&#34;addProviderTiles&#34;,&#34;args&#34;:[&#34;OpenTopoMap&#34;,&#34;OpenTopoMap&#34;,&#34;OpenTopoMap&#34;,{&#34;errorTileUrl&#34;:&#34;&#34;,&#34;noWrap&#34;:false,&#34;detectRetina&#34;:false,&#34;pane&#34;:&#34;tilePane&#34;}]},{&#34;method&#34;:&#34;addLayersControl&#34;,&#34;args&#34;:[[&#34;CartoDB.Positron&#34;,&#34;OpenStreetMap&#34;,&#34;CartoDB.DarkMatter&#34;,&#34;Esri.WorldImagery&#34;,&#34;OpenTopoMap&#34;],[],{&#34;collapsed&#34;:true,&#34;autoZIndex&#34;:true,&#34;position&#34;:&#34;topleft&#34;}]},{&#34;method&#34;:&#34;addScaleBar&#34;,&#34;args&#34;:[{&#34;maxWidth&#34;:100,&#34;metric&#34;:true,&#34;imperial&#34;:true,&#34;updateWhenIdle&#34;:true,&#34;position&#34;:&#34;bottomleft&#34;}]},{&#34;method&#34;:&#34;addTiles&#34;,&#34;args&#34;:[&#34;https://earthengine.googleapis.com/v1alpha/projects/earthengine-legacy/maps/9f551c7f3cac1aabea745ce5f4f4fab3-361706eef7f1ca349ea6b1a020cd8d53/tiles/{z}/{x}/{y}&#34;,&#34;false color&#34;,&#34;false color&#34;,{&#34;minZoom&#34;:0,&#34;maxZoom&#34;:18,&#34;tileSize&#34;:256,&#34;subdomains&#34;:&#34;abc&#34;,&#34;errorTileUrl&#34;:&#34;&#34;,&#34;tms&#34;:false,&#34;noWrap&#34;:false,&#34;zoomOffset&#34;:0,&#34;zoomReverse&#34;:false,&#34;opacity&#34;:1,&#34;zIndex&#34;:1,&#34;detectRetina&#34;:false}]},{&#34;method&#34;:&#34;addLayersControl&#34;,&#34;args&#34;:[[&#34;CartoDB.Positron&#34;,&#34;OpenStreetMap&#34;,&#34;CartoDB.DarkMatter&#34;,&#34;Esri.WorldImagery&#34;,&#34;OpenTopoMap&#34;],&#34;false color&#34;,{&#34;collapsed&#34;:true,&#34;autoZIndex&#34;:true,&#34;position&#34;:&#34;topleft&#34;}]},{&#34;method&#34;:&#34;hideGroup&#34;,&#34;args&#34;:[null]}],&#34;setView&#34;:[[30.7050175238026,76.9299999999991],13,[]]},&#34;evals&#34;:[],&#34;jsHooks&#34;:{&#34;render&#34;:[{&#34;code&#34;:&#34;function(el, x, data) {\n  return (\n      function(el, x, data) {\n      // get the leaflet map\n      var map = this; //HTMLWidgets.find(&#39;#&#39; + el.id);\n      // we need a new div element because we have to handle\n      // the mouseover output separately\n      // debugger;\n      function addElement () {\n      // generate new div Element\n      var newDiv = $(document.createElement(&#39;div&#39;));\n      // append at end of leaflet htmlwidget container\n      $(el).append(newDiv);\n      //provide ID and style\n      newDiv.addClass(&#39;lnlt&#39;);\n      newDiv.css({\n      &#39;position&#39;: &#39;relative&#39;,\n      &#39;bottomleft&#39;:  &#39;0px&#39;,\n      &#39;background-color&#39;: &#39;rgba(255, 255, 255, 0.7)&#39;,\n      &#39;box-shadow&#39;: &#39;0 0 2px #bbb&#39;,\n      &#39;background-clip&#39;: &#39;padding-box&#39;,\n      &#39;margin&#39;: &#39;0&#39;,\n      &#39;padding-left&#39;: &#39;5px&#39;,\n      &#39;color&#39;: &#39;#333&#39;,\n      &#39;font&#39;: &#39;9px/1.5 \&#34;Helvetica Neue\&#34;, Arial, Helvetica, sans-serif&#39;,\n      &#39;z-index&#39;: &#39;700&#39;,\n      });\n      return newDiv;\n      }\n\n\n      // check for already existing lnlt class to not duplicate\n      var lnlt = $(el).find(&#39;.lnlt&#39;);\n\n      if(!lnlt.length) {\n      lnlt = addElement();\n\n      // grab the special div we generated in the beginning\n      // and put the mousmove output there\n\n      map.on(&#39;mousemove&#39;, function (e) {\n      if (e.originalEvent.ctrlKey) {\n      if (document.querySelector(&#39;.lnlt&#39;) === null) lnlt = addElement();\n      lnlt.text(\n                           &#39; lon: &#39; + (e.latlng.lng).toFixed(5) +\n                           &#39; | lat: &#39; + (e.latlng.lat).toFixed(5) +\n                           &#39; | zoom: &#39; + map.getZoom() +\n                           &#39; | x: &#39; + L.CRS.EPSG3857.project(e.latlng).x.toFixed(0) +\n                           &#39; | y: &#39; + L.CRS.EPSG3857.project(e.latlng).y.toFixed(0) +\n                           &#39; | epsg: 3857 &#39; +\n                           &#39; | proj4: +proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs &#39;);\n      } else {\n      if (document.querySelector(&#39;.lnlt&#39;) === null) lnlt = addElement();\n      lnlt.text(\n                      &#39; lon: &#39; + (e.latlng.lng).toFixed(5) +\n                      &#39; | lat: &#39; + (e.latlng.lat).toFixed(5) +\n                      &#39; | zoom: &#39; + map.getZoom() + &#39; &#39;);\n      }\n      });\n\n      // remove the lnlt div when mouse leaves map\n      map.on(&#39;mouseout&#39;, function (e) {\n      var strip = document.querySelector(&#39;.lnlt&#39;);\n      if( strip !==null) strip.remove();\n      });\n\n      };\n\n      //$(el).keypress(67, function(e) {\n      map.on(&#39;preclick&#39;, function(e) {\n      if (e.originalEvent.ctrlKey) {\n      if (document.querySelector(&#39;.lnlt&#39;) === null) lnlt = addElement();\n      lnlt.text(\n                      &#39; lon: &#39; + (e.latlng.lng).toFixed(5) +\n                      &#39; | lat: &#39; + (e.latlng.lat).toFixed(5) +\n                      &#39; | zoom: &#39; + map.getZoom() + &#39; &#39;);\n      var txt = document.querySelector(&#39;.lnlt&#39;).textContent;\n      console.log(txt);\n      //txt.innerText.focus();\n      //txt.select();\n      setClipboardText(&#39;\&#34;&#39; + txt + &#39;\&#34;&#39;);\n      }\n      });\n\n      }\n      ).call(this.getMap(), el, x, data);\n}&#34;,&#34;data&#34;:null},{&#34;code&#34;:&#34;function(el, x, data) {\n  return (function(el,x,data){\n           var map = this;\n\n           map.on(&#39;keypress&#39;, function(e) {\n               console.log(e.originalEvent.code);\n               var key = e.originalEvent.code;\n               if (key === &#39;KeyE&#39;) {\n                   var bb = this.getBounds();\n                   var txt = JSON.stringify(bb);\n                   console.log(txt);\n\n                   setClipboardText(&#39;\\&#39;&#39; + txt + &#39;\\&#39;&#39;);\n               }\n           })\n        }).call(this.getMap(), el, x, data);\n}&#34;,&#34;data&#34;:null}]}}&lt;/script&gt;
+&lt;/div&gt;
+&lt;div id=&#34;median-ndvi&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Median NDVI&lt;/h1&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# calculate indices e.g. NDVI
+ndvi &amp;lt;- img$expression(
+  expression = &amp;quot;(NIR - RED)/(NIR + RED)&amp;quot;,
+  opt_map = list(&amp;quot;RED&amp;quot; = img$select(&amp;quot;B4&amp;quot;),
+                 &amp;quot;NIR&amp;quot; = img$select(&amp;quot;B8&amp;quot;)
+                 ))$rename(&amp;quot;ndvi&amp;quot;)
+
+Map$centerObject(roi, 13)
+Map$addLayer(ndvi, 
+             visParams = list(min = 0, max = 1, 
+                              palette = c(&amp;quot;brown&amp;quot;, &amp;quot;yellow&amp;quot;, &amp;quot;green&amp;quot;)),
+             name = &amp;quot;NDVI&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;div id=&#34;htmlwidget-3&#34; style=&#34;width:90%;height:480px;&#34; class=&#34;leaflet html-widget&#34;&gt;&lt;/div&gt;
+&lt;script type=&#34;application/json&#34; data-for=&#34;htmlwidget-3&#34;&gt;{&#34;x&#34;:{&#34;options&#34;:{&#34;minZoom&#34;:1,&#34;maxZoom&#34;:52,&#34;crs&#34;:{&#34;crsClass&#34;:&#34;L.CRS.EPSG3857&#34;,&#34;code&#34;:null,&#34;proj4def&#34;:null,&#34;projectedBounds&#34;:null,&#34;options&#34;:{}},&#34;preferCanvas&#34;:false,&#34;bounceAtZoomLimits&#34;:false,&#34;maxBounds&#34;:[[[-90,-370]],[[90,370]]]},&#34;calls&#34;:[{&#34;method&#34;:&#34;addProviderTiles&#34;,&#34;args&#34;:[&#34;CartoDB.Positron&#34;,&#34;CartoDB.Positron&#34;,&#34;CartoDB.Positron&#34;,{&#34;errorTileUrl&#34;:&#34;&#34;,&#34;noWrap&#34;:false,&#34;detectRetina&#34;:false,&#34;pane&#34;:&#34;tilePane&#34;}]},{&#34;method&#34;:&#34;addProviderTiles&#34;,&#34;args&#34;:[&#34;OpenStreetMap&#34;,&#34;OpenStreetMap&#34;,&#34;OpenStreetMap&#34;,{&#34;errorTileUrl&#34;:&#34;&#34;,&#34;noWrap&#34;:false,&#34;detectRetina&#34;:false,&#34;pane&#34;:&#34;tilePane&#34;}]},{&#34;method&#34;:&#34;addProviderTiles&#34;,&#34;args&#34;:[&#34;CartoDB.DarkMatter&#34;,&#34;CartoDB.DarkMatter&#34;,&#34;CartoDB.DarkMatter&#34;,{&#34;errorTileUrl&#34;:&#34;&#34;,&#34;noWrap&#34;:false,&#34;detectRetina&#34;:false,&#34;pane&#34;:&#34;tilePane&#34;}]},{&#34;method&#34;:&#34;addProviderTiles&#34;,&#34;args&#34;:[&#34;Esri.WorldImagery&#34;,&#34;Esri.WorldImagery&#34;,&#34;Esri.WorldImagery&#34;,{&#34;errorTileUrl&#34;:&#34;&#34;,&#34;noWrap&#34;:false,&#34;detectRetina&#34;:false,&#34;pane&#34;:&#34;tilePane&#34;}]},{&#34;method&#34;:&#34;addProviderTiles&#34;,&#34;args&#34;:[&#34;OpenTopoMap&#34;,&#34;OpenTopoMap&#34;,&#34;OpenTopoMap&#34;,{&#34;errorTileUrl&#34;:&#34;&#34;,&#34;noWrap&#34;:false,&#34;detectRetina&#34;:false,&#34;pane&#34;:&#34;tilePane&#34;}]},{&#34;method&#34;:&#34;addLayersControl&#34;,&#34;args&#34;:[[&#34;CartoDB.Positron&#34;,&#34;OpenStreetMap&#34;,&#34;CartoDB.DarkMatter&#34;,&#34;Esri.WorldImagery&#34;,&#34;OpenTopoMap&#34;],[],{&#34;collapsed&#34;:true,&#34;autoZIndex&#34;:true,&#34;position&#34;:&#34;topleft&#34;}]},{&#34;method&#34;:&#34;addScaleBar&#34;,&#34;args&#34;:[{&#34;maxWidth&#34;:100,&#34;metric&#34;:true,&#34;imperial&#34;:true,&#34;updateWhenIdle&#34;:true,&#34;position&#34;:&#34;bottomleft&#34;}]},{&#34;method&#34;:&#34;addTiles&#34;,&#34;args&#34;:[&#34;https://earthengine.googleapis.com/v1alpha/projects/earthengine-legacy/maps/d5b9238176123690bc1cfa7164f08f7a-697cec27650c95e3569813ef16afd9cf/tiles/{z}/{x}/{y}&#34;,&#34;NDVI&#34;,&#34;NDVI&#34;,{&#34;minZoom&#34;:0,&#34;maxZoom&#34;:18,&#34;tileSize&#34;:256,&#34;subdomains&#34;:&#34;abc&#34;,&#34;errorTileUrl&#34;:&#34;&#34;,&#34;tms&#34;:false,&#34;noWrap&#34;:false,&#34;zoomOffset&#34;:0,&#34;zoomReverse&#34;:false,&#34;opacity&#34;:1,&#34;zIndex&#34;:1,&#34;detectRetina&#34;:false}]},{&#34;method&#34;:&#34;addLayersControl&#34;,&#34;args&#34;:[[&#34;CartoDB.Positron&#34;,&#34;OpenStreetMap&#34;,&#34;CartoDB.DarkMatter&#34;,&#34;Esri.WorldImagery&#34;,&#34;OpenTopoMap&#34;],&#34;NDVI&#34;,{&#34;collapsed&#34;:true,&#34;autoZIndex&#34;:true,&#34;position&#34;:&#34;topleft&#34;}]},{&#34;method&#34;:&#34;hideGroup&#34;,&#34;args&#34;:[null]}],&#34;setView&#34;:[[30.7050175238026,76.9299999999991],13,[]]},&#34;evals&#34;:[],&#34;jsHooks&#34;:{&#34;render&#34;:[{&#34;code&#34;:&#34;function(el, x, data) {\n  return (\n      function(el, x, data) {\n      // get the leaflet map\n      var map = this; //HTMLWidgets.find(&#39;#&#39; + el.id);\n      // we need a new div element because we have to handle\n      // the mouseover output separately\n      // debugger;\n      function addElement () {\n      // generate new div Element\n      var newDiv = $(document.createElement(&#39;div&#39;));\n      // append at end of leaflet htmlwidget container\n      $(el).append(newDiv);\n      //provide ID and style\n      newDiv.addClass(&#39;lnlt&#39;);\n      newDiv.css({\n      &#39;position&#39;: &#39;relative&#39;,\n      &#39;bottomleft&#39;:  &#39;0px&#39;,\n      &#39;background-color&#39;: &#39;rgba(255, 255, 255, 0.7)&#39;,\n      &#39;box-shadow&#39;: &#39;0 0 2px #bbb&#39;,\n      &#39;background-clip&#39;: &#39;padding-box&#39;,\n      &#39;margin&#39;: &#39;0&#39;,\n      &#39;padding-left&#39;: &#39;5px&#39;,\n      &#39;color&#39;: &#39;#333&#39;,\n      &#39;font&#39;: &#39;9px/1.5 \&#34;Helvetica Neue\&#34;, Arial, Helvetica, sans-serif&#39;,\n      &#39;z-index&#39;: &#39;700&#39;,\n      });\n      return newDiv;\n      }\n\n\n      // check for already existing lnlt class to not duplicate\n      var lnlt = $(el).find(&#39;.lnlt&#39;);\n\n      if(!lnlt.length) {\n      lnlt = addElement();\n\n      // grab the special div we generated in the beginning\n      // and put the mousmove output there\n\n      map.on(&#39;mousemove&#39;, function (e) {\n      if (e.originalEvent.ctrlKey) {\n      if (document.querySelector(&#39;.lnlt&#39;) === null) lnlt = addElement();\n      lnlt.text(\n                           &#39; lon: &#39; + (e.latlng.lng).toFixed(5) +\n                           &#39; | lat: &#39; + (e.latlng.lat).toFixed(5) +\n                           &#39; | zoom: &#39; + map.getZoom() +\n                           &#39; | x: &#39; + L.CRS.EPSG3857.project(e.latlng).x.toFixed(0) +\n                           &#39; | y: &#39; + L.CRS.EPSG3857.project(e.latlng).y.toFixed(0) +\n                           &#39; | epsg: 3857 &#39; +\n                           &#39; | proj4: +proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs &#39;);\n      } else {\n      if (document.querySelector(&#39;.lnlt&#39;) === null) lnlt = addElement();\n      lnlt.text(\n                      &#39; lon: &#39; + (e.latlng.lng).toFixed(5) +\n                      &#39; | lat: &#39; + (e.latlng.lat).toFixed(5) +\n                      &#39; | zoom: &#39; + map.getZoom() + &#39; &#39;);\n      }\n      });\n\n      // remove the lnlt div when mouse leaves map\n      map.on(&#39;mouseout&#39;, function (e) {\n      var strip = document.querySelector(&#39;.lnlt&#39;);\n      if( strip !==null) strip.remove();\n      });\n\n      };\n\n      //$(el).keypress(67, function(e) {\n      map.on(&#39;preclick&#39;, function(e) {\n      if (e.originalEvent.ctrlKey) {\n      if (document.querySelector(&#39;.lnlt&#39;) === null) lnlt = addElement();\n      lnlt.text(\n                      &#39; lon: &#39; + (e.latlng.lng).toFixed(5) +\n                      &#39; | lat: &#39; + (e.latlng.lat).toFixed(5) +\n                      &#39; | zoom: &#39; + map.getZoom() + &#39; &#39;);\n      var txt = document.querySelector(&#39;.lnlt&#39;).textContent;\n      console.log(txt);\n      //txt.innerText.focus();\n      //txt.select();\n      setClipboardText(&#39;\&#34;&#39; + txt + &#39;\&#34;&#39;);\n      }\n      });\n\n      }\n      ).call(this.getMap(), el, x, data);\n}&#34;,&#34;data&#34;:null},{&#34;code&#34;:&#34;function(el, x, data) {\n  return (function(el,x,data){\n           var map = this;\n\n           map.on(&#39;keypress&#39;, function(e) {\n               console.log(e.originalEvent.code);\n               var key = e.originalEvent.code;\n               if (key === &#39;KeyE&#39;) {\n                   var bb = this.getBounds();\n                   var txt = JSON.stringify(bb);\n                   console.log(txt);\n\n                   setClipboardText(&#39;\\&#39;&#39; + txt + &#39;\\&#39;&#39;);\n               }\n           })\n        }).call(this.getMap(), el, x, data);\n}&#34;,&#34;data&#34;:null}]}}&lt;/script&gt;
+&lt;/div&gt;
+&lt;div id=&#34;references&#34; class=&#34;section level1 unnumbered&#34;&gt;
+&lt;h1&gt;References&lt;/h1&gt;
+&lt;div id=&#34;refs&#34; class=&#34;references csl-bib-body hanging-indent&#34;&gt;
+&lt;div id=&#34;ref-Gorelick2017&#34; class=&#34;csl-entry&#34;&gt;
+Gorelick, Noel, Matt Hancher, Mike Dixon, Simon Ilyushchenko, David Thau, and Rebecca Moore. 2017. &lt;span&gt;“Google Earth Engine: Planetary-Scale Geospatial Analysis for Everyone”&lt;/span&gt; 202 (December): 18–27. &lt;a href=&#34;https://doi.org/10.1016/j.rse.2017.06.031&#34;&gt;https://doi.org/10.1016/j.rse.2017.06.031&lt;/a&gt;.
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Analysis of Variance (ANOVA) with R</title>
       <link>https://akumar.netlify.app/post/anova/</link>
       <pubDate>Wed, 13 Oct 2021 00:00:00 +0000</pubDate>
       <guid>https://akumar.netlify.app/post/anova/</guid>
@@ -37,12 +136,12 @@ and I get frustrated). Data from the last year are shown in the following table.
 ) |&amp;gt; as.data.frame()
     
 dat |&amp;gt; gt::gt()&lt;/code&gt;&lt;/pre&gt;
-&lt;div id=&#34;eqkdlrfcpw&#34; style=&#34;overflow-x:auto;overflow-y:auto;width:auto;height:auto;&#34;&gt;
+&lt;div id=&#34;anybswkrxx&#34; style=&#34;overflow-x:auto;overflow-y:auto;width:auto;height:auto;&#34;&gt;
 &lt;style&gt;html {
   font-family: -apple-system, BlinkMacSystemFont, &#39;Segoe UI&#39;, Roboto, Oxygen, Ubuntu, Cantarell, &#39;Helvetica Neue&#39;, &#39;Fira Sans&#39;, &#39;Droid Sans&#39;, Arial, sans-serif;
 }
 
-#eqkdlrfcpw .gt_table {
+#anybswkrxx .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -67,7 +166,7 @@ dat |&amp;gt; gt::gt()&lt;/code&gt;&lt;/pre&gt;
   border-left-color: #D3D3D3;
 }
 
-#eqkdlrfcpw .gt_heading {
+#anybswkrxx .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -79,7 +178,7 @@ dat |&amp;gt; gt::gt()&lt;/code&gt;&lt;/pre&gt;
   border-right-color: #D3D3D3;
 }
 
-#eqkdlrfcpw .gt_title {
+#anybswkrxx .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -89,7 +188,7 @@ dat |&amp;gt; gt::gt()&lt;/code&gt;&lt;/pre&gt;
   border-bottom-width: 0;
 }
 
-#eqkdlrfcpw .gt_subtitle {
+#anybswkrxx .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -99,13 +198,13 @@ dat |&amp;gt; gt::gt()&lt;/code&gt;&lt;/pre&gt;
   border-top-width: 0;
 }
 
-#eqkdlrfcpw .gt_bottom_border {
+#anybswkrxx .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#eqkdlrfcpw .gt_col_headings {
+#anybswkrxx .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -120,7 +219,7 @@ dat |&amp;gt; gt::gt()&lt;/code&gt;&lt;/pre&gt;
   border-right-color: #D3D3D3;
 }
 
-#eqkdlrfcpw .gt_col_heading {
+#anybswkrxx .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -140,7 +239,7 @@ dat |&amp;gt; gt::gt()&lt;/code&gt;&lt;/pre&gt;
   overflow-x: hidden;
 }
 
-#eqkdlrfcpw .gt_column_spanner_outer {
+#anybswkrxx .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -152,15 +251,15 @@ dat |&amp;gt; gt::gt()&lt;/code&gt;&lt;/pre&gt;
   padding-right: 4px;
 }
 
-#eqkdlrfcpw .gt_column_spanner_outer:first-child {
+#anybswkrxx .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#eqkdlrfcpw .gt_column_spanner_outer:last-child {
+#anybswkrxx .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#eqkdlrfcpw .gt_column_spanner {
+#anybswkrxx .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -172,7 +271,7 @@ dat |&amp;gt; gt::gt()&lt;/code&gt;&lt;/pre&gt;
   width: 100%;
 }
 
-#eqkdlrfcpw .gt_group_heading {
+#anybswkrxx .gt_group_heading {
   padding: 8px;
   color: #333333;
   background-color: #FFFFFF;
@@ -194,7 +293,7 @@ dat |&amp;gt; gt::gt()&lt;/code&gt;&lt;/pre&gt;
   vertical-align: middle;
 }
 
-#eqkdlrfcpw .gt_empty_group_heading {
+#anybswkrxx .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -209,15 +308,15 @@ dat |&amp;gt; gt::gt()&lt;/code&gt;&lt;/pre&gt;
   vertical-align: middle;
 }
 
-#eqkdlrfcpw .gt_from_md &gt; :first-child {
+#anybswkrxx .gt_from_md &gt; :first-child {
   margin-top: 0;
 }
 
-#eqkdlrfcpw .gt_from_md &gt; :last-child {
+#anybswkrxx .gt_from_md &gt; :last-child {
   margin-bottom: 0;
 }
 
-#eqkdlrfcpw .gt_row {
+#anybswkrxx .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -236,7 +335,7 @@ dat |&amp;gt; gt::gt()&lt;/code&gt;&lt;/pre&gt;
   overflow-x: hidden;
 }
 
-#eqkdlrfcpw .gt_stub {
+#anybswkrxx .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -248,7 +347,7 @@ dat |&amp;gt; gt::gt()&lt;/code&gt;&lt;/pre&gt;
   padding-left: 12px;
 }
 
-#eqkdlrfcpw .gt_summary_row {
+#anybswkrxx .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -258,7 +357,7 @@ dat |&amp;gt; gt::gt()&lt;/code&gt;&lt;/pre&gt;
   padding-right: 5px;
 }
 
-#eqkdlrfcpw .gt_first_summary_row {
+#anybswkrxx .gt_first_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -268,7 +367,7 @@ dat |&amp;gt; gt::gt()&lt;/code&gt;&lt;/pre&gt;
   border-top-color: #D3D3D3;
 }
 
-#eqkdlrfcpw .gt_grand_summary_row {
+#anybswkrxx .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -278,7 +377,7 @@ dat |&amp;gt; gt::gt()&lt;/code&gt;&lt;/pre&gt;
   padding-right: 5px;
 }
 
-#eqkdlrfcpw .gt_first_grand_summary_row {
+#anybswkrxx .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -288,11 +387,11 @@ dat |&amp;gt; gt::gt()&lt;/code&gt;&lt;/pre&gt;
   border-top-color: #D3D3D3;
 }
 
-#eqkdlrfcpw .gt_striped {
+#anybswkrxx .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#eqkdlrfcpw .gt_table_body {
+#anybswkrxx .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -301,7 +400,7 @@ dat |&amp;gt; gt::gt()&lt;/code&gt;&lt;/pre&gt;
   border-bottom-color: #D3D3D3;
 }
 
-#eqkdlrfcpw .gt_footnotes {
+#anybswkrxx .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -315,13 +414,13 @@ dat |&amp;gt; gt::gt()&lt;/code&gt;&lt;/pre&gt;
   border-right-color: #D3D3D3;
 }
 
-#eqkdlrfcpw .gt_footnote {
+#anybswkrxx .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding: 4px;
 }
 
-#eqkdlrfcpw .gt_sourcenotes {
+#anybswkrxx .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -335,41 +434,41 @@ dat |&amp;gt; gt::gt()&lt;/code&gt;&lt;/pre&gt;
   border-right-color: #D3D3D3;
 }
 
-#eqkdlrfcpw .gt_sourcenote {
+#anybswkrxx .gt_sourcenote {
   font-size: 90%;
   padding: 4px;
 }
 
-#eqkdlrfcpw .gt_left {
+#anybswkrxx .gt_left {
   text-align: left;
 }
 
-#eqkdlrfcpw .gt_center {
+#anybswkrxx .gt_center {
   text-align: center;
 }
 
-#eqkdlrfcpw .gt_right {
+#anybswkrxx .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#eqkdlrfcpw .gt_font_normal {
+#anybswkrxx .gt_font_normal {
   font-weight: normal;
 }
 
-#eqkdlrfcpw .gt_font_bold {
+#anybswkrxx .gt_font_bold {
   font-weight: bold;
 }
 
-#eqkdlrfcpw .gt_font_italic {
+#anybswkrxx .gt_font_italic {
   font-style: italic;
 }
 
-#eqkdlrfcpw .gt_super {
+#anybswkrxx .gt_super {
   font-size: 65%;
 }
 
-#eqkdlrfcpw .gt_footnote_marks {
+#anybswkrxx .gt_footnote_marks {
   font-style: italic;
   font-weight: normal;
   font-size: 65%;
@@ -434,12 +533,12 @@ dat_long &amp;lt;- t(dat) |&amp;gt; as.data.frame() |&amp;gt;
     pivot_longer(cols = everything(), names_to = &amp;quot;season&amp;quot;, values_to = &amp;quot;obs&amp;quot;)
 
 dat_long |&amp;gt; head() |&amp;gt; gt::gt()&lt;/code&gt;&lt;/pre&gt;
-&lt;div id=&#34;gyajfpdywa&#34; style=&#34;overflow-x:auto;overflow-y:auto;width:auto;height:auto;&#34;&gt;
+&lt;div id=&#34;aqeowrhoij&#34; style=&#34;overflow-x:auto;overflow-y:auto;width:auto;height:auto;&#34;&gt;
 &lt;style&gt;html {
   font-family: -apple-system, BlinkMacSystemFont, &#39;Segoe UI&#39;, Roboto, Oxygen, Ubuntu, Cantarell, &#39;Helvetica Neue&#39;, &#39;Fira Sans&#39;, &#39;Droid Sans&#39;, Arial, sans-serif;
 }
 
-#gyajfpdywa .gt_table {
+#aqeowrhoij .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -464,7 +563,7 @@ dat_long |&amp;gt; head() |&amp;gt; gt::gt()&lt;/code&gt;&lt;/pre&gt;
   border-left-color: #D3D3D3;
 }
 
-#gyajfpdywa .gt_heading {
+#aqeowrhoij .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -476,7 +575,7 @@ dat_long |&amp;gt; head() |&amp;gt; gt::gt()&lt;/code&gt;&lt;/pre&gt;
   border-right-color: #D3D3D3;
 }
 
-#gyajfpdywa .gt_title {
+#aqeowrhoij .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -486,7 +585,7 @@ dat_long |&amp;gt; head() |&amp;gt; gt::gt()&lt;/code&gt;&lt;/pre&gt;
   border-bottom-width: 0;
 }
 
-#gyajfpdywa .gt_subtitle {
+#aqeowrhoij .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -496,13 +595,13 @@ dat_long |&amp;gt; head() |&amp;gt; gt::gt()&lt;/code&gt;&lt;/pre&gt;
   border-top-width: 0;
 }
 
-#gyajfpdywa .gt_bottom_border {
+#aqeowrhoij .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#gyajfpdywa .gt_col_headings {
+#aqeowrhoij .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -517,7 +616,7 @@ dat_long |&amp;gt; head() |&amp;gt; gt::gt()&lt;/code&gt;&lt;/pre&gt;
   border-right-color: #D3D3D3;
 }
 
-#gyajfpdywa .gt_col_heading {
+#aqeowrhoij .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -537,7 +636,7 @@ dat_long |&amp;gt; head() |&amp;gt; gt::gt()&lt;/code&gt;&lt;/pre&gt;
   overflow-x: hidden;
 }
 
-#gyajfpdywa .gt_column_spanner_outer {
+#aqeowrhoij .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -549,15 +648,15 @@ dat_long |&amp;gt; head() |&amp;gt; gt::gt()&lt;/code&gt;&lt;/pre&gt;
   padding-right: 4px;
 }
 
-#gyajfpdywa .gt_column_spanner_outer:first-child {
+#aqeowrhoij .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#gyajfpdywa .gt_column_spanner_outer:last-child {
+#aqeowrhoij .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#gyajfpdywa .gt_column_spanner {
+#aqeowrhoij .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -569,7 +668,7 @@ dat_long |&amp;gt; head() |&amp;gt; gt::gt()&lt;/code&gt;&lt;/pre&gt;
   width: 100%;
 }
 
-#gyajfpdywa .gt_group_heading {
+#aqeowrhoij .gt_group_heading {
   padding: 8px;
   color: #333333;
   background-color: #FFFFFF;
@@ -591,7 +690,7 @@ dat_long |&amp;gt; head() |&amp;gt; gt::gt()&lt;/code&gt;&lt;/pre&gt;
   vertical-align: middle;
 }
 
-#gyajfpdywa .gt_empty_group_heading {
+#aqeowrhoij .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -606,15 +705,15 @@ dat_long |&amp;gt; head() |&amp;gt; gt::gt()&lt;/code&gt;&lt;/pre&gt;
   vertical-align: middle;
 }
 
-#gyajfpdywa .gt_from_md &gt; :first-child {
+#aqeowrhoij .gt_from_md &gt; :first-child {
   margin-top: 0;
 }
 
-#gyajfpdywa .gt_from_md &gt; :last-child {
+#aqeowrhoij .gt_from_md &gt; :last-child {
   margin-bottom: 0;
 }
 
-#gyajfpdywa .gt_row {
+#aqeowrhoij .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -633,7 +732,7 @@ dat_long |&amp;gt; head() |&amp;gt; gt::gt()&lt;/code&gt;&lt;/pre&gt;
   overflow-x: hidden;
 }
 
-#gyajfpdywa .gt_stub {
+#aqeowrhoij .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -645,7 +744,7 @@ dat_long |&amp;gt; head() |&amp;gt; gt::gt()&lt;/code&gt;&lt;/pre&gt;
   padding-left: 12px;
 }
 
-#gyajfpdywa .gt_summary_row {
+#aqeowrhoij .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -655,7 +754,7 @@ dat_long |&amp;gt; head() |&amp;gt; gt::gt()&lt;/code&gt;&lt;/pre&gt;
   padding-right: 5px;
 }
 
-#gyajfpdywa .gt_first_summary_row {
+#aqeowrhoij .gt_first_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -665,7 +764,7 @@ dat_long |&amp;gt; head() |&amp;gt; gt::gt()&lt;/code&gt;&lt;/pre&gt;
   border-top-color: #D3D3D3;
 }
 
-#gyajfpdywa .gt_grand_summary_row {
+#aqeowrhoij .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -675,7 +774,7 @@ dat_long |&amp;gt; head() |&amp;gt; gt::gt()&lt;/code&gt;&lt;/pre&gt;
   padding-right: 5px;
 }
 
-#gyajfpdywa .gt_first_grand_summary_row {
+#aqeowrhoij .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -685,11 +784,11 @@ dat_long |&amp;gt; head() |&amp;gt; gt::gt()&lt;/code&gt;&lt;/pre&gt;
   border-top-color: #D3D3D3;
 }
 
-#gyajfpdywa .gt_striped {
+#aqeowrhoij .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#gyajfpdywa .gt_table_body {
+#aqeowrhoij .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -698,7 +797,7 @@ dat_long |&amp;gt; head() |&amp;gt; gt::gt()&lt;/code&gt;&lt;/pre&gt;
   border-bottom-color: #D3D3D3;
 }
 
-#gyajfpdywa .gt_footnotes {
+#aqeowrhoij .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -712,13 +811,13 @@ dat_long |&amp;gt; head() |&amp;gt; gt::gt()&lt;/code&gt;&lt;/pre&gt;
   border-right-color: #D3D3D3;
 }
 
-#gyajfpdywa .gt_footnote {
+#aqeowrhoij .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding: 4px;
 }
 
-#gyajfpdywa .gt_sourcenotes {
+#aqeowrhoij .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -732,41 +831,41 @@ dat_long |&amp;gt; head() |&amp;gt; gt::gt()&lt;/code&gt;&lt;/pre&gt;
   border-right-color: #D3D3D3;
 }
 
-#gyajfpdywa .gt_sourcenote {
+#aqeowrhoij .gt_sourcenote {
   font-size: 90%;
   padding: 4px;
 }
 
-#gyajfpdywa .gt_left {
+#aqeowrhoij .gt_left {
   text-align: left;
 }
 
-#gyajfpdywa .gt_center {
+#aqeowrhoij .gt_center {
   text-align: center;
 }
 
-#gyajfpdywa .gt_right {
+#aqeowrhoij .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#gyajfpdywa .gt_font_normal {
+#aqeowrhoij .gt_font_normal {
   font-weight: normal;
 }
 
-#gyajfpdywa .gt_font_bold {
+#aqeowrhoij .gt_font_bold {
   font-weight: bold;
 }
 
-#gyajfpdywa .gt_font_italic {
+#aqeowrhoij .gt_font_italic {
   font-style: italic;
 }
 
-#gyajfpdywa .gt_super {
+#aqeowrhoij .gt_super {
   font-size: 65%;
 }
 
-#gyajfpdywa .gt_footnote_marks {
+#aqeowrhoij .gt_footnote_marks {
   font-style: italic;
   font-weight: normal;
   font-size: 65%;
@@ -798,21 +897,17 @@ dat_long |&amp;gt; head() |&amp;gt; gt::gt()&lt;/code&gt;&lt;/pre&gt;
   
 &lt;/table&gt;
 &lt;/div&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;str(dat_long)&lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code&gt;## tibble [30 x 2] (S3: tbl_df/tbl/data.frame)
-##  $ season: chr [1:30] &amp;quot;Summer&amp;quot; &amp;quot;Shoulder&amp;quot; &amp;quot;Winter&amp;quot; &amp;quot;Summer&amp;quot; ...
-##  $ obs   : num [1:30] 83 91 94 85 87 91 85 84 87 87 ...&lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 &lt;div id=&#34;anova-in-r&#34; class=&#34;section level2&#34;&gt;
 &lt;h2&gt;Anova in R&lt;/h2&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;mod &amp;lt;- aov(data = dat_long, obs~season)
 mod |&amp;gt; broom::tidy() |&amp;gt; gt::gt()&lt;/code&gt;&lt;/pre&gt;
-&lt;div id=&#34;jaxlgkfudd&#34; style=&#34;overflow-x:auto;overflow-y:auto;width:auto;height:auto;&#34;&gt;
+&lt;div id=&#34;uatxeuieks&#34; style=&#34;overflow-x:auto;overflow-y:auto;width:auto;height:auto;&#34;&gt;
 &lt;style&gt;html {
   font-family: -apple-system, BlinkMacSystemFont, &#39;Segoe UI&#39;, Roboto, Oxygen, Ubuntu, Cantarell, &#39;Helvetica Neue&#39;, &#39;Fira Sans&#39;, &#39;Droid Sans&#39;, Arial, sans-serif;
 }
 
-#jaxlgkfudd .gt_table {
+#uatxeuieks .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -837,7 +932,7 @@ mod |&amp;gt; broom::tidy() |&amp;gt; gt::gt()&lt;/code&gt;&lt;/pre&gt;
   border-left-color: #D3D3D3;
 }
 
-#jaxlgkfudd .gt_heading {
+#uatxeuieks .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -849,7 +944,7 @@ mod |&amp;gt; broom::tidy() |&amp;gt; gt::gt()&lt;/code&gt;&lt;/pre&gt;
   border-right-color: #D3D3D3;
 }
 
-#jaxlgkfudd .gt_title {
+#uatxeuieks .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -859,7 +954,7 @@ mod |&amp;gt; broom::tidy() |&amp;gt; gt::gt()&lt;/code&gt;&lt;/pre&gt;
   border-bottom-width: 0;
 }
 
-#jaxlgkfudd .gt_subtitle {
+#uatxeuieks .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -869,13 +964,13 @@ mod |&amp;gt; broom::tidy() |&amp;gt; gt::gt()&lt;/code&gt;&lt;/pre&gt;
   border-top-width: 0;
 }
 
-#jaxlgkfudd .gt_bottom_border {
+#uatxeuieks .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#jaxlgkfudd .gt_col_headings {
+#uatxeuieks .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -890,7 +985,7 @@ mod |&amp;gt; broom::tidy() |&amp;gt; gt::gt()&lt;/code&gt;&lt;/pre&gt;
   border-right-color: #D3D3D3;
 }
 
-#jaxlgkfudd .gt_col_heading {
+#uatxeuieks .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -910,7 +1005,7 @@ mod |&amp;gt; broom::tidy() |&amp;gt; gt::gt()&lt;/code&gt;&lt;/pre&gt;
   overflow-x: hidden;
 }
 
-#jaxlgkfudd .gt_column_spanner_outer {
+#uatxeuieks .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -922,15 +1017,15 @@ mod |&amp;gt; broom::tidy() |&amp;gt; gt::gt()&lt;/code&gt;&lt;/pre&gt;
   padding-right: 4px;
 }
 
-#jaxlgkfudd .gt_column_spanner_outer:first-child {
+#uatxeuieks .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#jaxlgkfudd .gt_column_spanner_outer:last-child {
+#uatxeuieks .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#jaxlgkfudd .gt_column_spanner {
+#uatxeuieks .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -942,7 +1037,7 @@ mod |&amp;gt; broom::tidy() |&amp;gt; gt::gt()&lt;/code&gt;&lt;/pre&gt;
   width: 100%;
 }
 
-#jaxlgkfudd .gt_group_heading {
+#uatxeuieks .gt_group_heading {
   padding: 8px;
   color: #333333;
   background-color: #FFFFFF;
@@ -964,7 +1059,7 @@ mod |&amp;gt; broom::tidy() |&amp;gt; gt::gt()&lt;/code&gt;&lt;/pre&gt;
   vertical-align: middle;
 }
 
-#jaxlgkfudd .gt_empty_group_heading {
+#uatxeuieks .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -979,15 +1074,15 @@ mod |&amp;gt; broom::tidy() |&amp;gt; gt::gt()&lt;/code&gt;&lt;/pre&gt;
   vertical-align: middle;
 }
 
-#jaxlgkfudd .gt_from_md &gt; :first-child {
+#uatxeuieks .gt_from_md &gt; :first-child {
   margin-top: 0;
 }
 
-#jaxlgkfudd .gt_from_md &gt; :last-child {
+#uatxeuieks .gt_from_md &gt; :last-child {
   margin-bottom: 0;
 }
 
-#jaxlgkfudd .gt_row {
+#uatxeuieks .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1006,7 +1101,7 @@ mod |&amp;gt; broom::tidy() |&amp;gt; gt::gt()&lt;/code&gt;&lt;/pre&gt;
   overflow-x: hidden;
 }
 
-#jaxlgkfudd .gt_stub {
+#uatxeuieks .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1018,7 +1113,7 @@ mod |&amp;gt; broom::tidy() |&amp;gt; gt::gt()&lt;/code&gt;&lt;/pre&gt;
   padding-left: 12px;
 }
 
-#jaxlgkfudd .gt_summary_row {
+#uatxeuieks .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1028,7 +1123,7 @@ mod |&amp;gt; broom::tidy() |&amp;gt; gt::gt()&lt;/code&gt;&lt;/pre&gt;
   padding-right: 5px;
 }
 
-#jaxlgkfudd .gt_first_summary_row {
+#uatxeuieks .gt_first_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1038,7 +1133,7 @@ mod |&amp;gt; broom::tidy() |&amp;gt; gt::gt()&lt;/code&gt;&lt;/pre&gt;
   border-top-color: #D3D3D3;
 }
 
-#jaxlgkfudd .gt_grand_summary_row {
+#uatxeuieks .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1048,7 +1143,7 @@ mod |&amp;gt; broom::tidy() |&amp;gt; gt::gt()&lt;/code&gt;&lt;/pre&gt;
   padding-right: 5px;
 }
 
-#jaxlgkfudd .gt_first_grand_summary_row {
+#uatxeuieks .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1058,11 +1153,11 @@ mod |&amp;gt; broom::tidy() |&amp;gt; gt::gt()&lt;/code&gt;&lt;/pre&gt;
   border-top-color: #D3D3D3;
 }
 
-#jaxlgkfudd .gt_striped {
+#uatxeuieks .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#jaxlgkfudd .gt_table_body {
+#uatxeuieks .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1071,7 +1166,7 @@ mod |&amp;gt; broom::tidy() |&amp;gt; gt::gt()&lt;/code&gt;&lt;/pre&gt;
   border-bottom-color: #D3D3D3;
 }
 
-#jaxlgkfudd .gt_footnotes {
+#uatxeuieks .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1085,13 +1180,13 @@ mod |&amp;gt; broom::tidy() |&amp;gt; gt::gt()&lt;/code&gt;&lt;/pre&gt;
   border-right-color: #D3D3D3;
 }
 
-#jaxlgkfudd .gt_footnote {
+#uatxeuieks .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding: 4px;
 }
 
-#jaxlgkfudd .gt_sourcenotes {
+#uatxeuieks .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1105,41 +1200,41 @@ mod |&amp;gt; broom::tidy() |&amp;gt; gt::gt()&lt;/code&gt;&lt;/pre&gt;
   border-right-color: #D3D3D3;
 }
 
-#jaxlgkfudd .gt_sourcenote {
+#uatxeuieks .gt_sourcenote {
   font-size: 90%;
   padding: 4px;
 }
 
-#jaxlgkfudd .gt_left {
+#uatxeuieks .gt_left {
   text-align: left;
 }
 
-#jaxlgkfudd .gt_center {
+#uatxeuieks .gt_center {
   text-align: center;
 }
 
-#jaxlgkfudd .gt_right {
+#uatxeuieks .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#jaxlgkfudd .gt_font_normal {
+#uatxeuieks .gt_font_normal {
   font-weight: normal;
 }
 
-#jaxlgkfudd .gt_font_bold {
+#uatxeuieks .gt_font_bold {
   font-weight: bold;
 }
 
-#jaxlgkfudd .gt_font_italic {
+#uatxeuieks .gt_font_italic {
   font-style: italic;
 }
 
-#jaxlgkfudd .gt_super {
+#uatxeuieks .gt_super {
   font-size: 65%;
 }
 
-#jaxlgkfudd .gt_footnote_marks {
+#uatxeuieks .gt_footnote_marks {
   font-style: italic;
   font-weight: normal;
   font-size: 65%;
@@ -1183,7 +1278,7 @@ mod |&amp;gt; broom::tidy() |&amp;gt; gt::gt()&lt;/code&gt;&lt;/pre&gt;
 all groups. The residuals versus fits plot can be used to check the homogeneity
 of variances.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;plot(mod, 1)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;https://akumar.netlify.app/post/anova/index_files/figure-html/unnamed-chunk-3-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://akumar.netlify.app/post/anova/index_files/figure-html/unnamed-chunk-4-1.svg&#34; width=&#34;90%&#34; style=&#34;display: block; margin: auto;&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;In the above plot, there is no evident relationships between residuals and fitted
 values (the mean of each groups), which is good. So, we can assume the homogeneity
 of variances.&lt;/p&gt;
@@ -1191,12 +1286,12 @@ of variances.&lt;/p&gt;
 homogeneity of variances. I recommend Levene’s test, which is less sensitive to
 departures from normal distribution.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;bartlett.test(obs ~ season, data = dat_long) |&amp;gt; broom::tidy() |&amp;gt; gt::gt()&lt;/code&gt;&lt;/pre&gt;
-&lt;div id=&#34;tydlqgymzv&#34; style=&#34;overflow-x:auto;overflow-y:auto;width:auto;height:auto;&#34;&gt;
+&lt;div id=&#34;ogdlrhiays&#34; style=&#34;overflow-x:auto;overflow-y:auto;width:auto;height:auto;&#34;&gt;
 &lt;style&gt;html {
   font-family: -apple-system, BlinkMacSystemFont, &#39;Segoe UI&#39;, Roboto, Oxygen, Ubuntu, Cantarell, &#39;Helvetica Neue&#39;, &#39;Fira Sans&#39;, &#39;Droid Sans&#39;, Arial, sans-serif;
 }
 
-#tydlqgymzv .gt_table {
+#ogdlrhiays .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -1221,7 +1316,7 @@ departures from normal distribution.&lt;/p&gt;
   border-left-color: #D3D3D3;
 }
 
-#tydlqgymzv .gt_heading {
+#ogdlrhiays .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1233,7 +1328,7 @@ departures from normal distribution.&lt;/p&gt;
   border-right-color: #D3D3D3;
 }
 
-#tydlqgymzv .gt_title {
+#ogdlrhiays .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1243,7 +1338,7 @@ departures from normal distribution.&lt;/p&gt;
   border-bottom-width: 0;
 }
 
-#tydlqgymzv .gt_subtitle {
+#ogdlrhiays .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1253,13 +1348,13 @@ departures from normal distribution.&lt;/p&gt;
   border-top-width: 0;
 }
 
-#tydlqgymzv .gt_bottom_border {
+#ogdlrhiays .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#tydlqgymzv .gt_col_headings {
+#ogdlrhiays .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1274,7 +1369,7 @@ departures from normal distribution.&lt;/p&gt;
   border-right-color: #D3D3D3;
 }
 
-#tydlqgymzv .gt_col_heading {
+#ogdlrhiays .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1294,7 +1389,7 @@ departures from normal distribution.&lt;/p&gt;
   overflow-x: hidden;
 }
 
-#tydlqgymzv .gt_column_spanner_outer {
+#ogdlrhiays .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1306,15 +1401,15 @@ departures from normal distribution.&lt;/p&gt;
   padding-right: 4px;
 }
 
-#tydlqgymzv .gt_column_spanner_outer:first-child {
+#ogdlrhiays .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#tydlqgymzv .gt_column_spanner_outer:last-child {
+#ogdlrhiays .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#tydlqgymzv .gt_column_spanner {
+#ogdlrhiays .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1326,7 +1421,7 @@ departures from normal distribution.&lt;/p&gt;
   width: 100%;
 }
 
-#tydlqgymzv .gt_group_heading {
+#ogdlrhiays .gt_group_heading {
   padding: 8px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1348,7 +1443,7 @@ departures from normal distribution.&lt;/p&gt;
   vertical-align: middle;
 }
 
-#tydlqgymzv .gt_empty_group_heading {
+#ogdlrhiays .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1363,15 +1458,15 @@ departures from normal distribution.&lt;/p&gt;
   vertical-align: middle;
 }
 
-#tydlqgymzv .gt_from_md &gt; :first-child {
+#ogdlrhiays .gt_from_md &gt; :first-child {
   margin-top: 0;
 }
 
-#tydlqgymzv .gt_from_md &gt; :last-child {
+#ogdlrhiays .gt_from_md &gt; :last-child {
   margin-bottom: 0;
 }
 
-#tydlqgymzv .gt_row {
+#ogdlrhiays .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1390,7 +1485,7 @@ departures from normal distribution.&lt;/p&gt;
   overflow-x: hidden;
 }
 
-#tydlqgymzv .gt_stub {
+#ogdlrhiays .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1402,7 +1497,7 @@ departures from normal distribution.&lt;/p&gt;
   padding-left: 12px;
 }
 
-#tydlqgymzv .gt_summary_row {
+#ogdlrhiays .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1412,7 +1507,7 @@ departures from normal distribution.&lt;/p&gt;
   padding-right: 5px;
 }
 
-#tydlqgymzv .gt_first_summary_row {
+#ogdlrhiays .gt_first_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1422,7 +1517,7 @@ departures from normal distribution.&lt;/p&gt;
   border-top-color: #D3D3D3;
 }
 
-#tydlqgymzv .gt_grand_summary_row {
+#ogdlrhiays .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1432,7 +1527,7 @@ departures from normal distribution.&lt;/p&gt;
   padding-right: 5px;
 }
 
-#tydlqgymzv .gt_first_grand_summary_row {
+#ogdlrhiays .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1442,11 +1537,11 @@ departures from normal distribution.&lt;/p&gt;
   border-top-color: #D3D3D3;
 }
 
-#tydlqgymzv .gt_striped {
+#ogdlrhiays .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#tydlqgymzv .gt_table_body {
+#ogdlrhiays .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1455,7 +1550,7 @@ departures from normal distribution.&lt;/p&gt;
   border-bottom-color: #D3D3D3;
 }
 
-#tydlqgymzv .gt_footnotes {
+#ogdlrhiays .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1469,13 +1564,13 @@ departures from normal distribution.&lt;/p&gt;
   border-right-color: #D3D3D3;
 }
 
-#tydlqgymzv .gt_footnote {
+#ogdlrhiays .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding: 4px;
 }
 
-#tydlqgymzv .gt_sourcenotes {
+#ogdlrhiays .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1489,41 +1584,41 @@ departures from normal distribution.&lt;/p&gt;
   border-right-color: #D3D3D3;
 }
 
-#tydlqgymzv .gt_sourcenote {
+#ogdlrhiays .gt_sourcenote {
   font-size: 90%;
   padding: 4px;
 }
 
-#tydlqgymzv .gt_left {
+#ogdlrhiays .gt_left {
   text-align: left;
 }
 
-#tydlqgymzv .gt_center {
+#ogdlrhiays .gt_center {
   text-align: center;
 }
 
-#tydlqgymzv .gt_right {
+#ogdlrhiays .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#tydlqgymzv .gt_font_normal {
+#ogdlrhiays .gt_font_normal {
   font-weight: normal;
 }
 
-#tydlqgymzv .gt_font_bold {
+#ogdlrhiays .gt_font_bold {
   font-weight: bold;
 }
 
-#tydlqgymzv .gt_font_italic {
+#ogdlrhiays .gt_font_italic {
   font-style: italic;
 }
 
-#tydlqgymzv .gt_super {
+#ogdlrhiays .gt_super {
   font-size: 65%;
 }
 
-#tydlqgymzv .gt_footnote_marks {
+#ogdlrhiays .gt_footnote_marks {
   font-style: italic;
   font-weight: normal;
   font-size: 65%;
@@ -1550,14 +1645,12 @@ departures from normal distribution.&lt;/p&gt;
 &lt;/table&gt;
 &lt;/div&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;car::leveneTest(obs ~ season, data = dat_long) |&amp;gt; broom::tidy() |&amp;gt; gt::gt()&lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code&gt;## Warning in leveneTest.default(y = y, group = group, ...): group coerced to
-## factor.&lt;/code&gt;&lt;/pre&gt;
-&lt;div id=&#34;lmnpuaklmh&#34; style=&#34;overflow-x:auto;overflow-y:auto;width:auto;height:auto;&#34;&gt;
+&lt;div id=&#34;xxvfhhenis&#34; style=&#34;overflow-x:auto;overflow-y:auto;width:auto;height:auto;&#34;&gt;
 &lt;style&gt;html {
   font-family: -apple-system, BlinkMacSystemFont, &#39;Segoe UI&#39;, Roboto, Oxygen, Ubuntu, Cantarell, &#39;Helvetica Neue&#39;, &#39;Fira Sans&#39;, &#39;Droid Sans&#39;, Arial, sans-serif;
 }
 
-#lmnpuaklmh .gt_table {
+#xxvfhhenis .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -1582,7 +1675,7 @@ departures from normal distribution.&lt;/p&gt;
   border-left-color: #D3D3D3;
 }
 
-#lmnpuaklmh .gt_heading {
+#xxvfhhenis .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1594,7 +1687,7 @@ departures from normal distribution.&lt;/p&gt;
   border-right-color: #D3D3D3;
 }
 
-#lmnpuaklmh .gt_title {
+#xxvfhhenis .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1604,7 +1697,7 @@ departures from normal distribution.&lt;/p&gt;
   border-bottom-width: 0;
 }
 
-#lmnpuaklmh .gt_subtitle {
+#xxvfhhenis .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1614,13 +1707,13 @@ departures from normal distribution.&lt;/p&gt;
   border-top-width: 0;
 }
 
-#lmnpuaklmh .gt_bottom_border {
+#xxvfhhenis .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#lmnpuaklmh .gt_col_headings {
+#xxvfhhenis .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1635,7 +1728,7 @@ departures from normal distribution.&lt;/p&gt;
   border-right-color: #D3D3D3;
 }
 
-#lmnpuaklmh .gt_col_heading {
+#xxvfhhenis .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1655,7 +1748,7 @@ departures from normal distribution.&lt;/p&gt;
   overflow-x: hidden;
 }
 
-#lmnpuaklmh .gt_column_spanner_outer {
+#xxvfhhenis .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1667,15 +1760,15 @@ departures from normal distribution.&lt;/p&gt;
   padding-right: 4px;
 }
 
-#lmnpuaklmh .gt_column_spanner_outer:first-child {
+#xxvfhhenis .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#lmnpuaklmh .gt_column_spanner_outer:last-child {
+#xxvfhhenis .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#lmnpuaklmh .gt_column_spanner {
+#xxvfhhenis .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1687,7 +1780,7 @@ departures from normal distribution.&lt;/p&gt;
   width: 100%;
 }
 
-#lmnpuaklmh .gt_group_heading {
+#xxvfhhenis .gt_group_heading {
   padding: 8px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1709,7 +1802,7 @@ departures from normal distribution.&lt;/p&gt;
   vertical-align: middle;
 }
 
-#lmnpuaklmh .gt_empty_group_heading {
+#xxvfhhenis .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1724,15 +1817,15 @@ departures from normal distribution.&lt;/p&gt;
   vertical-align: middle;
 }
 
-#lmnpuaklmh .gt_from_md &gt; :first-child {
+#xxvfhhenis .gt_from_md &gt; :first-child {
   margin-top: 0;
 }
 
-#lmnpuaklmh .gt_from_md &gt; :last-child {
+#xxvfhhenis .gt_from_md &gt; :last-child {
   margin-bottom: 0;
 }
 
-#lmnpuaklmh .gt_row {
+#xxvfhhenis .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1751,7 +1844,7 @@ departures from normal distribution.&lt;/p&gt;
   overflow-x: hidden;
 }
 
-#lmnpuaklmh .gt_stub {
+#xxvfhhenis .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1763,7 +1856,7 @@ departures from normal distribution.&lt;/p&gt;
   padding-left: 12px;
 }
 
-#lmnpuaklmh .gt_summary_row {
+#xxvfhhenis .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1773,7 +1866,7 @@ departures from normal distribution.&lt;/p&gt;
   padding-right: 5px;
 }
 
-#lmnpuaklmh .gt_first_summary_row {
+#xxvfhhenis .gt_first_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1783,7 +1876,7 @@ departures from normal distribution.&lt;/p&gt;
   border-top-color: #D3D3D3;
 }
 
-#lmnpuaklmh .gt_grand_summary_row {
+#xxvfhhenis .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1793,7 +1886,7 @@ departures from normal distribution.&lt;/p&gt;
   padding-right: 5px;
 }
 
-#lmnpuaklmh .gt_first_grand_summary_row {
+#xxvfhhenis .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1803,11 +1896,11 @@ departures from normal distribution.&lt;/p&gt;
   border-top-color: #D3D3D3;
 }
 
-#lmnpuaklmh .gt_striped {
+#xxvfhhenis .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#lmnpuaklmh .gt_table_body {
+#xxvfhhenis .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1816,7 +1909,7 @@ departures from normal distribution.&lt;/p&gt;
   border-bottom-color: #D3D3D3;
 }
 
-#lmnpuaklmh .gt_footnotes {
+#xxvfhhenis .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1830,13 +1923,13 @@ departures from normal distribution.&lt;/p&gt;
   border-right-color: #D3D3D3;
 }
 
-#lmnpuaklmh .gt_footnote {
+#xxvfhhenis .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding: 4px;
 }
 
-#lmnpuaklmh .gt_sourcenotes {
+#xxvfhhenis .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1850,41 +1943,41 @@ departures from normal distribution.&lt;/p&gt;
   border-right-color: #D3D3D3;
 }
 
-#lmnpuaklmh .gt_sourcenote {
+#xxvfhhenis .gt_sourcenote {
   font-size: 90%;
   padding: 4px;
 }
 
-#lmnpuaklmh .gt_left {
+#xxvfhhenis .gt_left {
   text-align: left;
 }
 
-#lmnpuaklmh .gt_center {
+#xxvfhhenis .gt_center {
   text-align: center;
 }
 
-#lmnpuaklmh .gt_right {
+#xxvfhhenis .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#lmnpuaklmh .gt_font_normal {
+#xxvfhhenis .gt_font_normal {
   font-weight: normal;
 }
 
-#lmnpuaklmh .gt_font_bold {
+#xxvfhhenis .gt_font_bold {
   font-weight: bold;
 }
 
-#lmnpuaklmh .gt_font_italic {
+#xxvfhhenis .gt_font_italic {
   font-style: italic;
 }
 
-#lmnpuaklmh .gt_super {
+#xxvfhhenis .gt_super {
   font-size: 65%;
 }
 
-#lmnpuaklmh .gt_footnote_marks {
+#xxvfhhenis .gt_footnote_marks {
   font-style: italic;
   font-weight: normal;
   font-size: 65%;
@@ -1916,32 +2009,376 @@ across groups is statistically significantly different. Therefore, we can assume
 the homogeneity of variances in the different treatment groups.&lt;/p&gt;
 &lt;p&gt;In our example, the homogeneity of variance assumption turned out to be fine:
 the Levene test is not significant.&lt;/p&gt;
-&lt;p&gt;&lt;em&gt;2. Normality&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;2. Normality&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;The normal probability plot of residuals is used to check the assumption that
 the residuals are normally distributed. In this plot, the quantiles of the residuals
 are plotted against the quantiles of the normal distribution. It should approximately
 follow a straight line.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;plot(mod, 2)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;https://akumar.netlify.app/post/anova/index_files/figure-html/unnamed-chunk-6-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://akumar.netlify.app/post/anova/index_files/figure-html/unnamed-chunk-7-1.svg&#34; width=&#34;90%&#34; style=&#34;display: block; margin: auto;&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;In the above plot, as all the points fall approximately along this reference line,
 we can assume normality.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;ggpubr::ggqqplot(residuals(mod))&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;https://akumar.netlify.app/post/anova/index_files/figure-html/unnamed-chunk-7-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://akumar.netlify.app/post/anova/index_files/figure-html/unnamed-chunk-8-1.svg&#34; width=&#34;90%&#34; style=&#34;display: block; margin: auto;&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;Alternatively, the normality assumption can be checked using the Shapiro-Wilk test
 on the ANOVA residuals.&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;shapiro.test(mod$residuals)&lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code&gt;## 
-##  Shapiro-Wilk normality test
-## 
-## data:  mod$residuals
-## W = 0.94121, p-value = 0.1579&lt;/code&gt;&lt;/pre&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;#or
-shapiro.test(residuals(mod))&lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code&gt;## 
-##  Shapiro-Wilk normality test
-## 
-## data:  residuals(mod)
-## W = 0.94121, p-value = 0.1579&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;mod |&amp;gt; residuals() |&amp;gt; shapiro.test() |&amp;gt; broom::tidy() |&amp;gt; gt::gt()&lt;/code&gt;&lt;/pre&gt;
+&lt;div id=&#34;khmhxunulx&#34; style=&#34;overflow-x:auto;overflow-y:auto;width:auto;height:auto;&#34;&gt;
+&lt;style&gt;html {
+  font-family: -apple-system, BlinkMacSystemFont, &#39;Segoe UI&#39;, Roboto, Oxygen, Ubuntu, Cantarell, &#39;Helvetica Neue&#39;, &#39;Fira Sans&#39;, &#39;Droid Sans&#39;, Arial, sans-serif;
+}
+
+#khmhxunulx .gt_table {
+  display: table;
+  border-collapse: collapse;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#khmhxunulx .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#khmhxunulx .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#khmhxunulx .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 0;
+  padding-bottom: 6px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#khmhxunulx .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#khmhxunulx .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#khmhxunulx .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#khmhxunulx .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#khmhxunulx .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#khmhxunulx .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#khmhxunulx .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#khmhxunulx .gt_group_heading {
+  padding: 8px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#khmhxunulx .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#khmhxunulx .gt_from_md &gt; :first-child {
+  margin-top: 0;
+}
+
+#khmhxunulx .gt_from_md &gt; :last-child {
+  margin-bottom: 0;
+}
+
+#khmhxunulx .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#khmhxunulx .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 12px;
+}
+
+#khmhxunulx .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#khmhxunulx .gt_first_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+}
+
+#khmhxunulx .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#khmhxunulx .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#khmhxunulx .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#khmhxunulx .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#khmhxunulx .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#khmhxunulx .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding: 4px;
+}
+
+#khmhxunulx .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#khmhxunulx .gt_sourcenote {
+  font-size: 90%;
+  padding: 4px;
+}
+
+#khmhxunulx .gt_left {
+  text-align: left;
+}
+
+#khmhxunulx .gt_center {
+  text-align: center;
+}
+
+#khmhxunulx .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#khmhxunulx .gt_font_normal {
+  font-weight: normal;
+}
+
+#khmhxunulx .gt_font_bold {
+  font-weight: bold;
+}
+
+#khmhxunulx .gt_font_italic {
+  font-style: italic;
+}
+
+#khmhxunulx .gt_super {
+  font-size: 65%;
+}
+
+#khmhxunulx .gt_footnote_marks {
+  font-style: italic;
+  font-weight: normal;
+  font-size: 65%;
+}
+&lt;/style&gt;
+&lt;table class=&#34;gt_table&#34;&gt;
+  
+  &lt;thead class=&#34;gt_col_headings&#34;&gt;
+    &lt;tr&gt;
+      &lt;th class=&#34;gt_col_heading gt_columns_bottom_border gt_right&#34; rowspan=&#34;1&#34; colspan=&#34;1&#34;&gt;statistic&lt;/th&gt;
+      &lt;th class=&#34;gt_col_heading gt_columns_bottom_border gt_right&#34; rowspan=&#34;1&#34; colspan=&#34;1&#34;&gt;p.value&lt;/th&gt;
+      &lt;th class=&#34;gt_col_heading gt_columns_bottom_border gt_left&#34; rowspan=&#34;1&#34; colspan=&#34;1&#34;&gt;method&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody class=&#34;gt_table_body&#34;&gt;
+    &lt;tr&gt;&lt;td class=&#34;gt_row gt_right&#34;&gt;0.9412094&lt;/td&gt;
+&lt;td class=&#34;gt_row gt_right&#34;&gt;0.1578603&lt;/td&gt;
+&lt;td class=&#34;gt_row gt_left&#34;&gt;Shapiro-Wilk normality test&lt;/td&gt;&lt;/tr&gt;
+  &lt;/tbody&gt;
+  
+  
+&lt;/table&gt;
+&lt;/div&gt;
 &lt;p&gt;In the above test pvalue greater than significance level (0.05) finds no indication
 that normality is violated.&lt;/p&gt;
 &lt;p&gt;Other diagnostic plot&lt;/p&gt;
@@ -1950,7 +2387,7 @@ plot(mod, 3)
 plot(mod, 4)
 plot(mod, 5)
 plot(mod, 6)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;https://akumar.netlify.app/post/anova/index_files/figure-html/unnamed-chunk-9-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://akumar.netlify.app/post/anova/index_files/figure-html/unnamed-chunk-10-1.svg&#34; width=&#34;90%&#34; style=&#34;display: block; margin: auto;&#34; /&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 </description>

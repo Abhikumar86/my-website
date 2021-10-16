@@ -20,10 +20,31 @@
     <loc>https://akumar.netlify.app/talk/</loc>
     <lastmod>2030-06-01T13:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://akumar.netlify.app/post/anova/</loc>
-    <lastmod>2021-10-13T13:13:34+05:30</lastmod>
+    <loc>https://akumar.netlify.app/categories/</loc>
+    <lastmod>2021-10-16T16:23:06+05:30</lastmod>
+  </url><url>
+    <loc>https://akumar.netlify.app/tag/google-earth-engine/</loc>
+    <lastmod>2021-10-16T16:23:06+05:30</lastmod>
+  </url><url>
+    <loc>https://akumar.netlify.app/post/google-earth-engine-in-r/</loc>
+    <lastmod>2021-10-16T16:23:06+05:30</lastmod>
   </url><url>
     <loc>https://akumar.netlify.app/post/</loc>
+    <lastmod>2021-10-16T16:23:06+05:30</lastmod>
+  </url><url>
+    <loc>https://akumar.netlify.app/category/r/</loc>
+    <lastmod>2021-10-16T16:23:06+05:30</lastmod>
+  </url><url>
+    <loc>https://akumar.netlify.app/tag/remote-sensing/</loc>
+    <lastmod>2021-10-16T16:23:06+05:30</lastmod>
+  </url><url>
+    <loc>https://akumar.netlify.app/category/rgee/</loc>
+    <lastmod>2021-10-16T16:23:06+05:30</lastmod>
+  </url><url>
+    <loc>https://akumar.netlify.app/tags/</loc>
+    <lastmod>2021-10-16T16:23:06+05:30</lastmod>
+  </url><url>
+    <loc>https://akumar.netlify.app/post/anova/</loc>
     <lastmod>2021-10-13T13:13:34+05:30</lastmod>
   </url><url>
     <loc>https://akumar.netlify.app/post/mwls/</loc>
@@ -72,9 +93,6 @@
     <lastmod>2021-04-22T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://akumar.netlify.app/publication/</loc>
-    <lastmod>2021-04-22T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://akumar.netlify.app/tags/</loc>
     <lastmod>2021-04-22T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://akumar.netlify.app/tag/tropical-forest/</loc>
@@ -128,16 +146,10 @@
     <loc>https://akumar.netlify.app/author/rupinder-kaur/</loc>
     <lastmod>2021-01-01T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://akumar.netlify.app/categories/</loc>
-    <lastmod>2020-12-01T21:13:14-05:00</lastmod>
-  </url><url>
     <loc>https://akumar.netlify.app/post/2020-12-01-r-rmarkdown/</loc>
     <lastmod>2020-12-01T21:13:14-05:00</lastmod>
   </url><url>
     <loc>https://akumar.netlify.app/tag/plot/</loc>
-    <lastmod>2020-12-01T21:13:14-05:00</lastmod>
-  </url><url>
-    <loc>https://akumar.netlify.app/category/r/</loc>
     <lastmod>2020-12-01T21:13:14-05:00</lastmod>
   </url><url>
     <loc>https://akumar.netlify.app/tag/r-markdown/</loc>
