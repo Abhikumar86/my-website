@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>raster | Abhishek Kumar</title>
+    <link>https://akumar.netlify.app/category/raster/</link>
+      <atom:link href="https://akumar.netlify.app/category/raster/index.xml" rel="self" type="application/rss+xml" />
+    <description>raster</description>
+    <generator>Wowchemy (https://wowchemy.com)</generator><language>en-us</language><copyright>© 2021 Abhishek Kumar</copyright><lastBuildDate>Sun, 24 Oct 2021 00:00:00 +0000</lastBuildDate>
+    <image>
+      <url>https://akumar.netlify.app/media/icon_hu63af8eaec43cac92558e0334cb2dff24_36198_512x512_fill_lanczos_center_3.png</url>
+      <title>raster</title>
+      <link>https://akumar.netlify.app/category/raster/</link>
+    </image>
+    
+    <item>
+      <title>Plotting rasters in R</title>
+      <link>https://akumar.netlify.app/post/plotting-rasters-in-r/</link>
+      <pubDate>Sun, 24 Oct 2021 00:00:00 +0000</pubDate>
+      <guid>https://akumar.netlify.app/post/plotting-rasters-in-r/</guid>
+      <description>
+&lt;script src=&#34;https://akumar.netlify.app/post/plotting-rasters-in-r/index_files/header-attrs/header-attrs.js&#34;&gt;&lt;/script&gt;
+
+
+&lt;div id=&#34;load-required-packages&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;load required packages&lt;/h2&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(raster)      # raster data
+library(rasterVis)   # raster data visualisation
+library(rgee)        # Google Earth Engine in R
+library(sf)          # spatial data handling
+library(tidyverse)   # general data wrangling and visualisation
+
+#knitr::write_bib(x = c(.packages(), &amp;quot;distill&amp;quot;), &amp;quot;packages.bib&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;getting-landcover-data-from-google-earth-engine&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Getting Landcover data from Google Earth Engine&lt;/h2&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;## load the package rgee
+library(rgee)
+
+## initialize google earth engine in R
+ee_Initialize(drive = T)
+
+## define a region of interest
+roi &amp;lt;- ee$Geometry$Rectangle(76.8100, 30.6676, 77.0010, 30.8084)
+
+## load and clip ESA WorldCover 2020 data
+landcover2020 &amp;lt;- ee$ImageCollection(&amp;quot;ESA/WorldCover/v100&amp;quot;)$
+  # select the first image
+  first()$
+  # clip to region of interest
+  clip(roi)
+
+## Move results from Earth Engine to Drive
+task_img &amp;lt;- ee_image_to_drive(
+  image = landcover2020,
+  folder = &amp;quot;rgee_backup&amp;quot;,
+  fileFormat = &amp;quot;GEO_TIFF&amp;quot;,
+  region = roi,
+  fileNamePrefix = &amp;quot;landcover_2020&amp;quot;
+)
+
+task_img$start()
+ee_monitoring(task_img)
+
+## Move results from Drive to local
+img &amp;lt;- ee_drive_to_local(task = task_img, dsn = &amp;quot;data/lc2020.tif&amp;quot;)
+
+## deauthorise google drive
+googledrive::drive_deauth()
+
+## remove all variables from environment
+rm(list = ls())&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;base-r&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;base R&lt;/h2&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;mwls_lc &amp;lt;- raster(&amp;quot;data/lc2020.tif&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;lattice-levelplot&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;lattice levelplot&lt;/h2&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(raster)
+library(rasterVis)
+
+## data from ESA WorldCover 2020 
+mwls_lc &amp;lt;- raster(&amp;quot;data/lc2020.tif&amp;quot;)
+
+levels(mwls_lc) &amp;lt;- data.frame(
+    ID = c(seq(10, 60, 10), 80),
+    landcover = c(&amp;quot;Trees&amp;quot;, &amp;quot;Shrubland&amp;quot;, &amp;quot;Grassland&amp;quot;, &amp;quot;Cropland&amp;quot;, &amp;quot;Built-up&amp;quot;, 
+             &amp;quot;Barren/Sparse \n Vegetation&amp;quot;, &amp;quot;Open water&amp;quot;)
+    )
+
+levelplot(mwls_lc, att=&amp;#39;landcover&amp;#39;,
+          col.regions = c(&amp;quot;#006400&amp;quot;, &amp;quot;#FFBB22&amp;quot;, &amp;quot;#FFFF4C&amp;quot;, &amp;quot;#F096FF&amp;quot;, &amp;quot;#FA0000&amp;quot;, 
+                          &amp;quot;#B4B4B4&amp;quot;, &amp;quot;#0064C8&amp;quot;),
+          colorkey = list(height = 1, labels = list(cex = 1.2)))&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;https://akumar.netlify.app/post/plotting-rasters-in-r/index_files/figure-html/unnamed-chunk-3-1.svg&#34; width=&#34;90%&#34; style=&#34;display: block; margin: auto;&#34; /&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;ggplot&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;ggplot&lt;/h2&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;
+## data from ESA WorldCover 2020 
+mwls_lc &amp;lt;- raster(&amp;quot;data/lc2020.tif&amp;quot;)
+
+## a function to convert raster to dataframe
+rasterdf &amp;lt;- function(x, aggregate = 1){
+    resampleFactor &amp;lt;- aggregate
+    inputRaster &amp;lt;- x    
+    inCols &amp;lt;- ncol(inputRaster)
+    inRows &amp;lt;- nrow(inputRaster)
+    
+    # Compute numbers of columns and rows in the new raster for mapping
+    resampledRaster &amp;lt;- raster(ncol = (inCols / resampleFactor),
+                              nrow = (inRows / resampleFactor))
+    
+    # Match to the extent of the original raster
+    extent(resampledRaster) &amp;lt;- extent(inputRaster)
+   
+    # Resample data on the new raster
+    y &amp;lt;- resample(inputRaster, resampledRaster, method=&amp;#39;ngb&amp;#39;)
+   
+    # Extract cell coordinates  
+    coords &amp;lt;- xyFromCell(y, seq_len(ncell(y)))
+    dat &amp;lt;- stack(as.data.frame(getValues(y)))
+    
+    # Add names - &amp;#39;value&amp;#39; for data, &amp;#39;variable&amp;#39; to indicate different raster layers
+    # in a stack
+    names(dat) &amp;lt;- c(&amp;#39;value&amp;#39;, &amp;#39;variable&amp;#39;)
+    dat &amp;lt;- cbind(coords, dat)
+    dat
+}
+
+## convert raster to data frame
+mwls_df &amp;lt;- rasterdf(mwls_lc)
+
+## prepare legend
+LCcodes &amp;lt;- c(seq(10, 90, 10), 95, 100)
+LCnames &amp;lt;- c(&amp;quot;Trees&amp;quot;, &amp;quot;Shrubland&amp;quot;, &amp;quot;Grassland&amp;quot;, &amp;quot;Cropland&amp;quot;, &amp;quot;Built-up&amp;quot;, 
+             &amp;quot;Barren/Sparse Vegetation&amp;quot;, &amp;quot;Snow and Ice&amp;quot;, &amp;quot;Open water&amp;quot;,
+             &amp;quot;Herbaceous wetland&amp;quot;, &amp;quot;Mangroves&amp;quot;, &amp;quot;Moss and lichen&amp;quot;)
+LCcolors &amp;lt;- attr(mwls_lc, &amp;quot;legend&amp;quot;)@colortable[LCcodes + 1]
+names(LCcolors) &amp;lt;- as.character(LCcodes)
+
+## plot the map
+ggplot(data = mwls_df) +
+  geom_raster(aes(x = x, y = y, fill = as.character(value))) + 
+  scale_fill_manual(name = &amp;quot;Land cover&amp;quot;,
+                    values = LCcolors[-c(7, 9:11)],
+                    labels = LCnames[-c(7, 9:11)],
+                    na.translate = FALSE) +
+  coord_sf(expand = F) +
+  theme(axis.title.x = element_blank(),
+        axis.title.y = element_blank(),
+        panel.background = element_rect(fill = &amp;quot;white&amp;quot;, color = &amp;quot;black&amp;quot;))&lt;/code&gt;&lt;/pre&gt;
+&lt;div class=&#34;figure&#34; style=&#34;text-align: center&#34;&gt;&lt;span style=&#34;display:block;&#34; id=&#34;fig:lc&#34;&gt;&lt;/span&gt;
+&lt;img src=&#34;https://akumar.netlify.app/post/plotting-rasters-in-r/index_files/figure-html/lc-1.svg&#34; alt=&#34;Land cover at Khol Hi Raitan wildlife sanctuary. Data source: ESA WorldCover 2020&#34; width=&#34;90%&#34; /&gt;
+&lt;p class=&#34;caption&#34;&gt;
+Figure 1: Land cover at Khol Hi Raitan wildlife sanctuary. Data source: ESA WorldCover 2020
+&lt;/p&gt;
+&lt;/div&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;
+## remove all variables from the environment
+rm(list = ls())&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;sessionInfo()
+#&amp;gt; R version 4.1.0 (2021-05-18)
+#&amp;gt; Platform: x86_64-w64-mingw32/x64 (64-bit)
+#&amp;gt; Running under: Windows 10 x64 (build 19043)
+#&amp;gt; 
+#&amp;gt; Matrix products: default
+#&amp;gt; 
+#&amp;gt; locale:
+#&amp;gt; [1] LC_COLLATE=English_India.1252  LC_CTYPE=English_India.1252   
+#&amp;gt; [3] LC_MONETARY=English_India.1252 LC_NUMERIC=C                  
+#&amp;gt; [5] LC_TIME=English_India.1252    
+#&amp;gt; 
+#&amp;gt; attached base packages:
+#&amp;gt; [1] stats     graphics  grDevices utils     datasets  methods   base     
+#&amp;gt; 
+#&amp;gt; other attached packages:
+#&amp;gt;  [1] forcats_0.5.1    stringr_1.4.0    dplyr_1.0.7      purrr_0.3.4     
+#&amp;gt;  [5] readr_2.0.2      tidyr_1.1.4      tibble_3.1.5     ggplot2_3.3.5   
+#&amp;gt;  [9] tidyverse_1.3.1  sf_1.0-3         rgee_1.1.0       rasterVis_0.51.0
+#&amp;gt; [13] lattice_0.20-44  raster_3.5-2     sp_1.4-5        
+#&amp;gt; 
+#&amp;gt; loaded via a namespace (and not attached):
+#&amp;gt;  [1] fs_1.5.0            lubridate_1.8.0     RColorBrewer_1.1-2 
+#&amp;gt;  [4] httr_1.4.2          tools_4.1.0         backports_1.2.1    
+#&amp;gt;  [7] bslib_0.3.1         rgdal_1.5-27        utf8_1.2.2         
+#&amp;gt; [10] R6_2.5.1            KernSmooth_2.23-20  DBI_1.1.1          
+#&amp;gt; [13] colorspace_2.0-2    withr_2.4.2         tidyselect_1.1.1   
+#&amp;gt; [16] processx_3.5.2      leaflet_2.0.4.1     compiler_4.1.0     
+#&amp;gt; [19] cli_3.0.1           rvest_1.0.2         xml2_1.3.2         
+#&amp;gt; [22] bookdown_0.24       sass_0.4.0          scales_1.1.1       
+#&amp;gt; [25] classInt_0.4-3      hexbin_1.28.2       proxy_0.4-26       
+#&amp;gt; [28] systemfonts_1.0.3   digest_0.6.28       svglite_2.0.0      
+#&amp;gt; [31] rmarkdown_2.11      jpeg_0.1-9          pkgconfig_2.0.3    
+#&amp;gt; [34] htmltools_0.5.2     highr_0.9           dbplyr_2.1.1       
+#&amp;gt; [37] fastmap_1.1.0       htmlwidgets_1.5.4   rlang_0.4.11       
+#&amp;gt; [40] readxl_1.3.1        rstudioapi_0.13     farver_2.1.0       
+#&amp;gt; [43] jquerylib_0.1.4     generics_0.1.0      zoo_1.8-9          
+#&amp;gt; [46] jsonlite_1.7.2      crosstalk_1.1.1     magrittr_2.0.1     
+#&amp;gt; [49] Matrix_1.3-3        Rcpp_1.0.7          munsell_0.5.0      
+#&amp;gt; [52] fansi_0.5.0         reticulate_1.22     lifecycle_1.0.1    
+#&amp;gt; [55] terra_1.4-11        stringi_1.7.5       yaml_2.2.1         
+#&amp;gt; [58] grid_4.1.0          parallel_4.1.0      crayon_1.4.1       
+#&amp;gt; [61] haven_2.4.3         hms_1.1.1           knitr_1.36         
+#&amp;gt; [64] ps_1.6.0            pillar_1.6.3        codetools_0.2-18   
+#&amp;gt; [67] reprex_2.0.1        glue_1.4.2          evaluate_0.14      
+#&amp;gt; [70] blogdown_1.5        latticeExtra_0.6-29 modelr_0.1.8       
+#&amp;gt; [73] png_0.1-7           vctrs_0.3.8         tzdb_0.1.2         
+#&amp;gt; [76] cellranger_1.1.0    gtable_0.3.0        assertthat_0.2.1   
+#&amp;gt; [79] xfun_0.26           broom_0.7.9         e1071_1.7-9        
+#&amp;gt; [82] class_7.3-19        viridisLite_0.4.0   units_0.7-2        
+#&amp;gt; [85] ellipsis_0.3.2&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

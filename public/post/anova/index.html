@@ -851,7 +851,7 @@
 
     <div class="article-style">
       
-<script src="https://akumar.netlify.app/post/anova/index_files/header-attrs/header-attrs.js"></script>
+<script src="/post/anova/index_files/header-attrs/header-attrs.js"></script>
 
 
 <div id="example-1" class="section level1">
@@ -2012,7 +2012,7 @@ mod |&gt; broom::tidy() |&gt; gt::gt()</code></pre>
 all groups. The residuals versus fits plot can be used to check the homogeneity
 of variances.</p>
 <pre class="r"><code>plot(mod, 1)</code></pre>
-<p><img src="https://akumar.netlify.app/post/anova/index_files/figure-html/unnamed-chunk-4-1.svg" width="90%" style="display: block; margin: auto;" /></p>
+<p><img src="/post/anova/index_files/figure-html/unnamed-chunk-4-1.svg" width="90%" style="display: block; margin: auto;" /></p>
 <p>In the above plot, there is no evident relationships between residuals and fitted
 values (the mean of each groups), which is good. So, we can assume the homogeneity
 of variances.</p>
@@ -2749,11 +2749,11 @@ the residuals are normally distributed. In this plot, the quantiles of the resid
 are plotted against the quantiles of the normal distribution. It should approximately
 follow a straight line.</p>
 <pre class="r"><code>plot(mod, 2)</code></pre>
-<p><img src="https://akumar.netlify.app/post/anova/index_files/figure-html/unnamed-chunk-7-1.svg" width="90%" style="display: block; margin: auto;" /></p>
+<p><img src="/post/anova/index_files/figure-html/unnamed-chunk-7-1.svg" width="90%" style="display: block; margin: auto;" /></p>
 <p>In the above plot, as all the points fall approximately along this reference line,
 we can assume normality.</p>
 <pre class="r"><code>ggpubr::ggqqplot(residuals(mod))</code></pre>
-<p><img src="https://akumar.netlify.app/post/anova/index_files/figure-html/unnamed-chunk-8-1.svg" width="90%" style="display: block; margin: auto;" /></p>
+<p><img src="/post/anova/index_files/figure-html/unnamed-chunk-8-1.svg" width="90%" style="display: block; margin: auto;" /></p>
 <p>Alternatively, the normality assumption can be checked using the Shapiro-Wilk test
 on the ANOVA residuals.</p>
 <pre class="r"><code>mod |&gt; residuals() |&gt; shapiro.test() |&gt; broom::tidy() |&gt; gt::gt()</code></pre>
@@ -3121,7 +3121,7 @@ plot(mod, 3)
 plot(mod, 4)
 plot(mod, 5)
 plot(mod, 6)</code></pre>
-<p><img src="https://akumar.netlify.app/post/anova/index_files/figure-html/unnamed-chunk-10-1.svg" width="90%" style="display: block; margin: auto;" /></p>
+<p><img src="/post/anova/index_files/figure-html/unnamed-chunk-10-1.svg" width="90%" style="display: block; margin: auto;" /></p>
 </div>
 </div>
 
