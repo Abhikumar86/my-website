@@ -49,7 +49,7 @@ publishDate: "2017-01-01T00:00:00Z"
 
 slides: 
 
-summary: Oral presentation at SLIET, Longowal. Abstract ID: YAP-02. 49 p.
+summary: "Oral presentation at SLIET, Longowal. Abstract ID: YAP-02. 49 p."
 
 tags:
     - Litter decomposition
