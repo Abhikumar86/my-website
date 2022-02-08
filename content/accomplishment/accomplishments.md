@@ -20,6 +20,16 @@ item:
   title: 'Data Manipulation and Business Analysis using Spreadsheets'
   url: "https://www.coursera.org/projects/data-manipulation-and-business-analysis-using-spreadsheets"
   
+- certificate_url: https://drive.google.com/file/d/19ZZidA2sf0dr4PebJ11T2DBWyb6A3nU7/view?usp=sharing
+  date_end: "2020-12-21"
+  date_start: "2020-12-09"
+  description: ""
+  organization: Ashoka Trust for Research in Ecology and the Environment (ATREE)
+  organization_url: https://www.atree.org/
+  title: 'Ecosystem Approaches to Food and Water Security for Rural Wellbeing - Western Himalayan Region'
+  url: ""  
+  
+  
 - certificate_url: https://www.coursera.org/verify/3QGWUV2FNDD3
   date_end: "2020-10-26"
   date_start: "2020-10-01"
@@ -37,6 +47,16 @@ item:
   organization_url: https://www.coursera.org
   title: 'Research Data Management and Sharing'
   url: "https://www.coursera.org/learn/data-management"
+  
+- certificate_url: https://drive.google.com/file/d/130uA7vJBgF2VQPz_c4Dpp8viRcZvoAv2/view?usp=sharing
+  date_end: "2020-09-25"
+  date_start: "2020-09-21"
+  description: ""  
+  organization: ATAL - NIT Raipur
+  organization_url: http://nitrr.ac.in/index.php
+  title: 'Data Sciences'
+  url: ""  
+  
   
 - certificate_url: https://www.coursera.org/verify/specialization/X95XHWK38A6T
   date_end: "2020-12-05"
@@ -99,6 +119,15 @@ item:
   organization_url: https://www.coursera.org
   title: 'Academic English: Writing'
   url: "https://www.coursera.org/specializations/academic-english" 
+  
+- certificate_url: https://drive.google.com/file/d/1zgc1ut5ncqFSazJViMkdIZRTyvLh9_oV/view?usp=sharing
+  date_end: "2020-06-07"
+  date_start: "2020-06-07"
+  description: ""
+  organization: Elsevier - Mendeley
+  organization_url: https://www.mendeley.com/
+  title: 'Mendeley Training Course'
+  url: ""   
   
 - certificate_url: https://www.coursera.org/verify/T9HGYN52RA4K
   date_end: "2020-06-17"
@@ -181,8 +210,45 @@ item:
   organization: Coursera - University of London
   organization_url: https://www.coursera.org
   title: 'Understanding Research Methods'
-  url: "https://www.coursera.org/learn/research-methods"   
+  url: "https://www.coursera.org/learn/research-methods"
+  
+- certificate_url: "https://drive.google.com/file/d/1u7SpJm0DdFImUxd3yFUwyb7e0RuGwyXJ/view?usp=sharing"
+  date_end: "2020-03-06"
+  date_start: "2020-03-02"
+  description: ""
+  organization: IIT Roorkee
+  organization_url: https://www.iitr.ac.in/
+  title: 'One Week Faculty Development Programme on Machine Learning using Python'
+  url: ""
+  
+- certificate_url: https://drive.google.com/file/d/1cmKusudifbm8QpiZK17bvp87ECuWtWz1/view?usp=sharing
+  date_end: "2020-01-31"
+  date_start: "2020-01-27"
+  description: ""
+  organization: Botanical Survey of India, Shillong
+  organization_url: https://bsi.gov.in/
+  title: 'Botanical Nomenclature Course'
+  url: ""  
+  
+- certificate_url: https://drive.google.com/file/d/18UAnFOFXcG_1Lbr1caJraHhj2J2rL080/view?usp=sharing
+  date_end: "2019-01-11"
+  date_start: "2019-01-10"
+  description: ""
+  organization: CCS Haryana Agricultural University, Hisar
+  organization_url: https://hau.ac.in/
+  title: 'Hands-On Training Program on Basic and Advanced Analytical Instrumentation in Plant Physiology'
+  url: ""  
+  
+- certificate_url: https://drive.google.com/file/d/1iDKoNH2gekt0kw63ALnvURbU5uMaAZ6J/view?usp=sharing
+  date_end: "2018-12-21"
+  date_start: "2018-12-14"
+  description: ""
+  organization: CSIR - National Botanical Research Institute, Lucknow
+  organization_url: https://nbri.res.in/
+  title: 'Training Course on Classical and Modern Methods in Plant Taxonomy and Biosystematics'
+  url: ""
   
 design:
   columns: '2'  
 ---
+
