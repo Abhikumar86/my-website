@@ -53,6 +53,9 @@ social:
 - icon: linkedin
   icon_pack: fab
   link: https://www.linkedin.com/in/abhikumar86/
+- icon: semantic-scholar
+  icon_pack: ai
+  link: https://www.semanticscholar.org/author/2136071059 
 ---
 
 Abhishek Kumar is a senior research fellow at the [Department of Botany](https://botany.puch.ac.in/) of Panjab University, Chandigarh. His research interests include the responses of ecological structure and functions to climate change, and he is currently working on the elevational pattern of plant distributions and diversity in the Siwalik Ecosystem.
