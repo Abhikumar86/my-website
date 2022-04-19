@@ -11,6 +11,15 @@ date_format: Jan 2006
 
 item:
 
+- certificate_url: https://drive.google.com/file/d/1Gydooj3gT8RnmAJdTfkhiLOguwXcd-Xx/view?usp=sharing
+  date_end: "2021-08-19"
+  date_start: "2021-08-12"
+  description: This training included three 1.5 hour sessions on overview and tools for species distribution modelling.
+  organization: NASA - ARSET
+  organization_url: https://appliedsciences.nasa.gov/
+  title: "Species Distribution Modeling with Remote Sensing"
+  url: "https://appliedsciences.nasa.gov/join-mission/training/english/arset-species-distribution-modeling-remote-sensing"
+
 - certificate_url: https://www.coursera.org/verify/VLBADS4LN2QQ
   date_end: "2020-12-15"
   date_start: "2020-12-15"
