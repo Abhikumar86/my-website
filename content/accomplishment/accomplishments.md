@@ -7,9 +7,18 @@ weight: 10
 title: 'Accomplish&shy;ments'
 subtitle:
 
-date_format: Jan 2006
+date_format: 02 Jan 2006
 
 item:
+
+- certificate_url: https://drive.google.com/file/d/1ucb37uWyBSEaQWCRgrBWo7IeG-ACiiu5/view?usp=sharing
+  date_end: "2022-07-17"
+  date_start: "2022-07-11"
+  description: This workshop included several sessions on foundations of for study design and statistical analysis in ecology. It also illustrated the applications of `R` programming for analysis and visualisation of ecological data.
+  organization: Centre for Ecological Sciences - Indian Institute of Science
+  organization_url: https://ces.iisc.ac.in/
+  title: "Quantitative Thinking Ecology"
+  url: "https://ces.iisc.ac.in/?q=node/1050"
 
 - certificate_url: https://drive.google.com/file/d/1Gydooj3gT8RnmAJdTfkhiLOguwXcd-Xx/view?usp=sharing
   date_end: "2021-08-19"
@@ -21,13 +30,14 @@ item:
   url: "https://appliedsciences.nasa.gov/join-mission/training/english/arset-species-distribution-modeling-remote-sensing"
 
 - certificate_url: https://www.coursera.org/verify/VLBADS4LN2QQ
-  date_end: "2020-12-15"
+  date_end: ""
   date_start: "2020-12-15"
   description: This 1-hour online guided project included data manipulation using formulas and functions in Google Spreadsheets.
   organization: Coursera - Project Network
   organization_url: https://www.coursera.org
   title: 'Data Manipulation and Business Analysis using Spreadsheets'
   url: "https://www.coursera.org/projects/data-manipulation-and-business-analysis-using-spreadsheets"
+  
   
 - certificate_url: https://drive.google.com/file/d/19ZZidA2sf0dr4PebJ11T2DBWyb6A3nU7/view?usp=sharing
   date_end: "2020-12-21"
@@ -130,7 +140,7 @@ item:
   url: "https://www.coursera.org/specializations/academic-english" 
   
 - certificate_url: https://drive.google.com/file/d/1zgc1ut5ncqFSazJViMkdIZRTyvLh9_oV/view?usp=sharing
-  date_end: "2020-06-07"
+  date_end: ""
   date_start: "2020-06-07"
   description: ""
   organization: Elsevier - Mendeley
