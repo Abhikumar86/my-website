@@ -43,7 +43,7 @@ item:
   date_end: "2020-12-21"
   date_start: "2020-12-09"
   description: ""
-  organization: Ashoka Trust for Research in Ecology and the Environment (ATREE)
+  organization: Ashoka Trust for Research in Ecology and the Environment
   organization_url: https://www.atree.org/
   title: 'Ecosystem Approaches to Food and Water Security for Rural Wellbeing - Western Himalayan Region'
   url: ""  
@@ -113,15 +113,15 @@ item:
   date_end: "2020-11-06"
   date_start: "2020-07-01"
   description: |2-
-      This 5-course online specialization covered how to analyze and visualize data in R, create reproducible data analysis reports, perform frequentist and Bayesian     statistical inference, model data to understand natural phenomena, make data-based decisions and communicate statistical results effectively.
-      * Introduction to Probability and Data with R
+      This 5-course online specialization covered how to analyze and visualize data in `R`, create reproducible data analysis reports, perform frequentist and Bayesian     statistical inference, model data to understand natural phenomena, make data-based decisions and communicate statistical results effectively.
+      * Introduction to Probability and Data with `R`
       * Inferential Statistics
       * Linear Regression and Modeling
       * Bayesian Statistics
-      * Statistics with R Capstone      
+      * Statistics with `R` Capstone      
   organization: Coursera - Duke University
   organization_url: https://www.coursera.org
-  title: 'Statistics with R'
+  title: 'Statistics with `R`'
   url: "https://www.coursera.org/specializations/statistics"  
   
 - certificate_url: https://www.coursera.org/verify/specialization/W7V7ZFSBQ4G2
@@ -197,9 +197,9 @@ item:
   date_end: "2020-11-25"
   date_start: "2020-05-01"
   description: |2-
-    This 10-course online specialization comprised of two specializations of 5-course each, namely Data Science: Foundations using R and Data Science: Statistics and Machine Learning covered the foundational concepts and tools for the data science pipeline including how to use the tools of the trade (The Data Scientist’s Toolbox) think analytically about complex problems (R Programming), manage large data sets (Getting and Cleaning Data), create visualizations (Exploratory Data Analysis), and publish reproducible analyses (Reproducible Research) This Specialization covers the concepts and tools you'll need throughout the entire data science pipeline, from asking the right kinds of questions to making inferences and publishing results. In the final Capstone Project, you’ll apply the skills learned by building a data product using real-world data. At completion, students will have a portfolio demonstrating their mastery of the material.
+    This 10-course online specialization comprised of two specializations of 5-course each, namely Data Science: Foundations using `R` and Data Science: Statistics and Machine Learning covered the foundational concepts and tools for the data science pipeline including how to use the tools of the trade (The Data Scientist’s Toolbox) think analytically about complex problems (`R` Programming), manage large data sets (Getting and Cleaning Data), create visualizations (Exploratory Data Analysis), and publish reproducible analyses (Reproducible Research) This Specialization covers the concepts and tools you'll need throughout the entire data science pipeline, from asking the right kinds of questions to making inferences and publishing results. In the final Capstone Project, you’ll apply the skills learned by building a data product using real-world data. At completion, students will have a portfolio demonstrating their mastery of the material.
       * The Data Scientist’s Toolbox
-      * R Programming
+      * `R` Programming
       * Getting and Cleaning Data
       * Exploratory Data Analysis
       * Reproducible Research
