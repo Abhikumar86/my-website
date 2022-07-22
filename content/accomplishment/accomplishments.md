@@ -17,7 +17,7 @@ item:
   description: This workshop included several sessions on foundations of for study design and statistical analysis in ecology. It also illustrated the applications of `R` programming for analysis and visualisation of ecological data.
   organization: Centre for Ecological Sciences - Indian Institute of Science
   organization_url: https://ces.iisc.ac.in/
-  title: "Quantitative Thinking Ecology"
+  title: "Quantitative Thinking in Ecology"
   url: "https://ces.iisc.ac.in/?q=node/1050"
 
 - certificate_url: https://drive.google.com/file/d/1Gydooj3gT8RnmAJdTfkhiLOguwXcd-Xx/view?usp=sharing
