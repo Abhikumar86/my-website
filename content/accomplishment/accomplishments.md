@@ -113,7 +113,7 @@ item:
   date_end: "2020-11-06"
   date_start: "2020-07-01"
   description: |2-
-      This 5-course online specialization covered how to analyze and visualize data in `R`, create reproducible data analysis reports, perform frequentist and Bayesian     statistical inference, model data to understand natural phenomena, make data-based decisions and communicate statistical results effectively.
+      This 5-course online specialization covered how to analyze and visualize data in `R`, create reproducible data analysis reports, perform frequentist and Bayesian statistical inference, model data to understand natural phenomena, make data-based decisions and communicate statistical results effectively.
       * Introduction to Probability and Data with `R`
       * Inferential Statistics
       * Linear Regression and Modeling
